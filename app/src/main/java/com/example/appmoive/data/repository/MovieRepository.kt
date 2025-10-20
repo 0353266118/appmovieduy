@@ -11,8 +11,8 @@ import retrofit2.Response
 // vì nó có thể lấy trực tiếp từ ApiClient singleton
 class MovieRepository {
 
-    suspend fun getPopularMovies(): Response<MovieResponse> {
-        return ApiClient.apiService.getPopularMovies()
+    suspend fun getPopularMovies(page: Int): Response<MovieResponse> {
+        return ApiClient.apiService.getPopularMovies(page = page)
     }
     suspend fun getTrendingMovies(): Response<MovieResponse> { // <-- Đổi tên hàm
         return ApiClient.apiService.getTrendingMovies() // <-- Gọi hàm mới của ApiService

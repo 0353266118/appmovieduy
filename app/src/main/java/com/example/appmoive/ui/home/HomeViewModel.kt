@@ -26,7 +26,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 // Thay vì gọi getTrendingMovies, chúng ta gọi getPopularMovies
-                val response = repository.getPopularMovies()
+                val response = repository.getPopularMovies(page = 1)
                 if (response.isSuccessful) {
                     // Cập nhật cho đúng LiveData _popularMovies
                     _popularMovies.postValue(response.body()?.movies)

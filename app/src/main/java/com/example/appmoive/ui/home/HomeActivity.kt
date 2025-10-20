@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appmoive.databinding.ActivityHomeBinding
 import com.example.appmoive.ui.adapters.BannerAdapter // <-- Đảm bảo đã import
 import com.example.appmoive.ui.adapters.MovieAdapter
+import com.example.appmoive.ui.movielist.MovieListActivity
+import android.content.Intent
 
 class HomeActivity : AppCompatActivity() {
 
@@ -30,6 +32,11 @@ class HomeActivity : AppCompatActivity() {
 
         homeViewModel.fetchPopularMovies()
         homeViewModel.fetchTrendingMovies()
+
+        binding.tvSeeAllRecommended.setOnClickListener {
+            val intent = Intent(this, MovieListActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupRecyclerView() {

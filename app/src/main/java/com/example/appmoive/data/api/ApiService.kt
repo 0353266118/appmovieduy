@@ -11,7 +11,8 @@ interface ApiService {
     // Endpoint để lấy danh sách phim phổ biến
     @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Query("api_key") apiKey: String = API_KEY
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("page") page: Int // Thêm tham số trang
     ): Response<MovieResponse>
 
     @GET("trending/movie/day") // <-- Sửa endpoint
