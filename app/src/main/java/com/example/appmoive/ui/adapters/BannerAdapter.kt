@@ -36,7 +36,7 @@ class BannerAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<Bann
                 .into(ivBannerImage)
 
             tvBannerTitle.text = movie.title
-            tvBannerDescription.text = "Trending movie of the day"
+            tvBannerDescription.text = movie.overview // Lấy mô tả thật từ API
         }
     }
 

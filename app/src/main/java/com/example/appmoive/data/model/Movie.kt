@@ -16,4 +16,9 @@ data class Movie(
 
     @SerializedName("backdrop_path")
     val backdropPath: String?, // Dùng String? vì có thể một số phim không có backdrop
+
+    @SerializedName("overview")
+    val overview: String
+
+
 )

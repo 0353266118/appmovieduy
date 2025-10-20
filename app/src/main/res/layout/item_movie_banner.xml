@@ -48,17 +48,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Lorem ipsum dolor sit amet,\nconsectetur adipisci elit"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/btn_watch_now"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/white"
-                android:text="Watch Now"
-                android:textColor="@color/movie_textColorPrimary_black" />
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textColor="@color/white"
+                tools:text="Đây là phần mô tả ngắn của bộ phim sẽ được hiển thị ở đây." />
         </LinearLayout>
 
     </FrameLayout>
