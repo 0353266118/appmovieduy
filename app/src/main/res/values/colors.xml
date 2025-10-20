@@ -2,4 +2,16 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Màu cho thiết kế Movi App -->
+    <color name="movie_backgroundColor_light">#FFFFFF</color> <!-- Nền trắng -->
+
+
+    <color name="movie_textColorPrimary_black">#181A20</color> <!-- Chữ đen -->
+
+    <color name="movie_textColorSecondary_grey">#9E9E9E</color> <!-- Chữ xám phụ -->
+
+    <color name="movie_banner_background">#6A5AE0</color> <!-- Nền tím của banner -->
+    <color name="movi_borderColor">#E5E5E5</color>
+    <color name="movi_buttonColor">#6A5AE0</color>"
 </resources>
