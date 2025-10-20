@@ -20,5 +20,11 @@ interface ApiService {
         @Query("api_key") apiKey: String = API_KEY
     ): Response<MovieResponse>
 
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovies(
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("page") page: Int
+    ): Response<MovieResponse>
+
 
 }

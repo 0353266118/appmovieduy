@@ -17,4 +17,7 @@ class MovieRepository {
     suspend fun getTrendingMovies(): Response<MovieResponse> { // <-- Đổi tên hàm
         return ApiClient.apiService.getTrendingMovies() // <-- Gọi hàm mới của ApiService
     }
+    suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
+        return ApiClient.apiService.getTopRatedMovies(page = page)
+    }
 }

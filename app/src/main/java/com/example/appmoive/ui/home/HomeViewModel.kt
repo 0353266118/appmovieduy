@@ -22,6 +22,10 @@ class HomeViewModel : ViewModel() {
     private val _trendingMovies = MutableLiveData<List<Movie>>()
     val trendingMovies: LiveData<List<Movie>> = _trendingMovies
 
+    // MỚI: Thêm LiveData cho danh sách Top Rated
+    private val _topRatedMovies = MutableLiveData<List<Movie>>()
+    val topRatedMovies: LiveData<List<Movie>> = _topRatedMovies
+
     fun fetchPopularMovies() {
         viewModelScope.launch {
             try {
@@ -51,6 +55,22 @@ class HomeViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    // MỚI: Thêm hàm fetch phim đánh giá cao
+    fun fetchTopRatedMovies() {
+        viewModelScope.launch {
+            try {
+                val response = repository.getTopRatedMovies(page = 1)
+                if (response.isSuccessful) {
+                    _topRatedMovies.postValue(response.body()?.movies)
+                } else {
+                    Log.e("HomeViewModel", "Error fetching top rated movies: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Exception fetching top rated: ${e.message}")
             }
         }
     }
