@@ -1,7 +1,11 @@
 // file: ui/detail/DetailActivity.kt
 package com.example.appmoive.ui.detail
+import android.content.Intent
+import android.net.Uri
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +24,9 @@ class DetailActivity : AppCompatActivity() {
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var reviewAdapter: ReviewAdapter
+
+    // Biến để lưu trữ key của trailer
+    private var currentTrailerKey: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +59,11 @@ class DetailActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = reviewAdapter
         }
+        binding.btnPlayTrailer.setOnClickListener {
+            currentTrailerKey?.let { key ->
+                playYouTubeTrailer(key)
+            }
+        }
 
         binding.ivBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
@@ -73,6 +85,17 @@ class DetailActivity : AppCompatActivity() {
                     tvOverview.text = it.overview
                     tvRuntime.text = formatRuntime(it.runtime)
                 }
+            }
+        }
+        // MỚI: Lắng nghe trailerKey
+        viewModel.trailerKey.observe(this) { key ->
+            currentTrailerKey = key
+            if (key != null) {
+                // Nếu có trailer, hiện nút Play lên
+                binding.btnPlayTrailer.visibility = View.VISIBLE
+            } else {
+                // Nếu không có, ẩn nút đi
+                binding.btnPlayTrailer.visibility = View.GONE
             }
         }
 
@@ -113,4 +136,19 @@ class DetailActivity : AppCompatActivity() {
             return dateString
         }
     }
+    private fun playYouTubeTrailer(videoKey: String) {
+        // Tạo Intent để mở ứng dụng YouTube
+        val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$videoKey"))
+        // Tạo Intent để mở trên trình duyệt web nếu không có ứng dụng YouTube
+        val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=$videoKey"))
+
+        try {
+            // Ưu tiên mở bằng app
+            startActivity(appIntent)
+        } catch (ex: ActivityNotFoundException) {
+            // Nếu không có app, mở bằng trình duyệt
+            startActivity(webIntent)
+        }
+    }
 }
+

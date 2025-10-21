@@ -4,6 +4,7 @@ import com.example.appmoive.data.model.CreditsResponse
 import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.data.model.MovieResponse
 import com.example.appmoive.data.model.ReviewsResponse
+import com.example.appmoive.data.model.VideosResponse
 import com.example.appmoive.utils.Constants.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
@@ -47,4 +48,10 @@ interface ApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY
     ): Response<ReviewsResponse>
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<VideosResponse>
 }

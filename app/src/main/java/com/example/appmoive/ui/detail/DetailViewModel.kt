@@ -22,6 +22,9 @@ class DetailViewModel : ViewModel() {
 
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
+    // MỚI: LiveData để lưu key của video trailer
+    private val _trailerKey = MutableLiveData<String?>()
+    val trailerKey: LiveData<String?> = _trailerKey
 
     fun fetchAllData(movieId: Int) {
         viewModelScope.launch {
@@ -42,6 +45,17 @@ class DetailViewModel : ViewModel() {
             val reviewsResponse = repository.getMovieReviews(movieId)
             if (reviewsResponse.isSuccessful) {
                 _reviews.postValue(reviewsResponse.body()?.results)
+            }
+
+            // Lấy danh sách video
+            val videosResponse = repository.getMovieVideos(movieId)
+            if (videosResponse.isSuccessful) {
+                // Tìm video đầu tiên là "Trailer" trên trang "YouTube"
+                val officialTrailer = videosResponse.body()?.results?.find { video ->
+                    video.site == "YouTube" && video.type == "Trailer"
+                }
+                // Cập nhật LiveData với key của trailer tìm được (hoặc null nếu không có)
+                _trailerKey.postValue(officialTrailer?.key)
             }
         }
     }
