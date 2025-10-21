@@ -54,4 +54,11 @@ interface ApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY
     ): Response<VideosResponse>
+
+    // MỚI: Endpoint để lấy phim liên quan
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<MovieResponse> // Tái sử dụng MovieResponse vì cấu trúc JSON giống nhau
 }

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="24dp">
 
-        <!-- ... Phần ImageView và Title không đổi ... -->
+        <!-- Phần Header và thông tin phim cơ bản (Không thay đổi) -->
         <ImageView
             android:id="@+id/iv_backdrop"
             android:layout_width="0dp"
@@ -66,11 +66,6 @@
             app:layout_constraintTop_toBottomOf="@id/iv_backdrop"
             tools:text="Tên phim" />
 
-        <!-- ======================================================= -->
-        <!-- SỬA LẠI KHỐI NÀY: TÁCH THÀNH 2 HÀNG -->
-        <!-- ======================================================= -->
-
-        <!-- HÀNG 1: Rating và Runtime -->
         <LinearLayout
             android:id="@+id/layout_info_row1"
             android:layout_width="0dp"
@@ -104,10 +99,8 @@
                 android:textColor="@color/movie_textColorSecondary_grey"
                 android:textSize="14sp"
                 tools:text="2h 22m" />
-
         </LinearLayout>
 
-        <!-- HÀNG 2: Release Date và Genres -->
         <LinearLayout
             android:id="@+id/layout_info_row2"
             android:layout_width="0dp"
@@ -140,11 +133,8 @@
                 android:textColor="@color/movie_textColorSecondary_grey"
                 android:textSize="14sp"
                 tools:text="Drama, Crime" />
-
         </LinearLayout>
 
-
-        <!-- ... Các phần còn lại của layout sẽ được constraint vào layout_info_row2 -->
         <Button
             android:id="@+id/btn_play_trailer"
             android:layout_width="0dp"
@@ -159,7 +149,6 @@
             app:layout_constraintStart_toStartOf="@id/layout_info_row2"
             app:layout_constraintTop_toBottomOf="@id/layout_info_row2" />
 
-        <!-- ... Các phần còn lại của layout không đổi ... -->
         <TextView
             android:id="@+id/tv_overview_label"
             android:layout_width="wrap_content"
@@ -211,6 +200,10 @@
             app:layout_constraintTop_toBottomOf="@id/tv_cast_label"
             tools:listitem="@layout/item_cast" />
 
+        <!-- ================================================================ -->
+        <!-- ================== PHẦN ĐƯỢC THAY ĐỔI ======================== -->
+        <!-- ================================================================ -->
+
         <TextView
             android:id="@+id/tv_reviews_label"
             android:layout_width="wrap_content"
@@ -223,17 +216,61 @@
             app:layout_constraintStart_toStartOf="@id/tv_cast_label"
             app:layout_constraintTop_toBottomOf="@id/rv_cast" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_reviews"
+        <!-- Container mới để giới hạn chiều cao tối đa của RecyclerView -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/reviews_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:paddingHorizontal="16dp"
+            app:layout_constraintHeight_max="300dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_reviews_label">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_reviews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="true"
+                android:paddingHorizontal="16dp"
+                android:contentDescription="List of movie reviews"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_review" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_reviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="tv_reviews_label,reviews_container" />
+
+        <TextView
+            android:id="@+id/tv_related_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Related Movies"
+            android:textColor="@color/movie_textColorPrimary_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_reviews_label"
+            app:layout_constraintTop_toBottomOf="@id/reviews_container" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_similar_movies"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_reviews_label"
-            tools:listitem="@layout/item_review" />
+            app:layout_constraintTop_toBottomOf="@id/tv_related_label"
+            tools:listitem="@layout/item_movie_poster" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

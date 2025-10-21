@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.appmoive.data.model.Cast
+import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.data.model.Review
 import com.example.appmoive.data.repository.MovieRepository
@@ -25,6 +26,9 @@ class DetailViewModel : ViewModel() {
     // MỚI: LiveData để lưu key của video trailer
     private val _trailerKey = MutableLiveData<String?>()
     val trailerKey: LiveData<String?> = _trailerKey
+
+    private val _similarMovies = MutableLiveData<List<Movie>>()
+    val similarMovies: LiveData<List<Movie>> = _similarMovies
 
     fun fetchAllData(movieId: Int) {
         viewModelScope.launch {
@@ -57,6 +61,13 @@ class DetailViewModel : ViewModel() {
                 // Cập nhật LiveData với key của trailer tìm được (hoặc null nếu không có)
                 _trailerKey.postValue(officialTrailer?.key)
             }
+
+            // MỚI: Lấy danh sách phim liên quan
+            val similarResponse = repository.getSimilarMovies(movieId)
+            if (similarResponse.isSuccessful) {
+                _similarMovies.postValue(similarResponse.body()?.movies)
+            }
+
         }
     }
 }

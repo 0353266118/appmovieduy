@@ -10,20 +10,24 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.databinding.ActivityDetailBinding
 import com.example.appmoive.ui.adapters.CastAdapter
+import com.example.appmoive.ui.adapters.MovieAdapter
+import com.example.appmoive.ui.adapters.OnMovieClickListener
 import com.example.appmoive.ui.adapters.ReviewAdapter
 import com.example.appmoive.utils.Constants.IMAGE_BASE_URL
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), OnMovieClickListener {
 
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var reviewAdapter: ReviewAdapter
+    private lateinit var similarMoviesAdapter: MovieAdapter // Tái sử dụng MovieAdapter
 
     // Biến để lưu trữ key của trailer
     private var currentTrailerKey: String? = null
@@ -66,6 +70,13 @@ class DetailActivity : AppCompatActivity() {
         }
 
         binding.ivBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+        // MỚI: Setup RecyclerView cho phim liên quan
+        similarMoviesAdapter = MovieAdapter(emptyList(), this) // Tái sử dụng và truyền listener
+        binding.rvSimilarMovies.apply {
+            layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = similarMoviesAdapter
+        }
     }
 
     private fun observeViewModel() {
@@ -106,8 +117,18 @@ class DetailActivity : AppCompatActivity() {
         }
 
         viewModel.reviews.observe(this) { reviewList ->
-            reviewList?.let {
-                reviewAdapter.setData(it)
+            if (reviewList.isNullOrEmpty()) {
+                // Logic này vẫn đúng: Ẩn cả tiêu đề và container
+                binding.groupReviews.visibility = View.GONE
+            } else {
+                // Hiện lên và đổ dữ liệu
+                binding.groupReviews.visibility = View.VISIBLE
+                reviewAdapter.setData(reviewList)
+            }
+        }
+        viewModel.similarMovies.observe(this) { movies ->
+            movies?.let {
+                similarMoviesAdapter.setData(it)
             }
         }
     }
@@ -149,6 +170,13 @@ class DetailActivity : AppCompatActivity() {
             // Nếu không có app, mở bằng trình duyệt
             startActivity(webIntent)
         }
+    }
+    override fun onMovieClick(movie: Movie) {
+        // Mở một DetailActivity mới cho phim liên quan
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra("MOVIE_ID", movie.id)
+        }
+        startActivity(intent)
     }
 }
 

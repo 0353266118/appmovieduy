@@ -49,10 +49,14 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
     // SỬA 2: Truyền "this" vào làm listener khi khởi tạo adapter
     private fun setupRecyclerView() {
-        recommendedAdapter = MovieAdapter(emptyList(), this) // Thêm "this"
+        recommendedAdapter = MovieAdapter(emptyList(), this)
         binding.rvRecommended.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = recommendedAdapter
+
+            // THÊM CÁC DÒNG NÀY VÀO
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
         }
     }
 
@@ -61,6 +65,10 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         binding.rvTopRated.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = topRatedAdapter
+
+            // THÊM CÁC DÒNG NÀY VÀO
+            setHasFixedSize(true)
+            setItemViewCacheSize(20)
         }
     }
 

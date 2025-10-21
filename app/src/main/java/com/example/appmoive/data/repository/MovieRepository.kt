@@ -24,4 +24,5 @@ class MovieRepository {
     suspend fun getMovieCredits(movieId: Int) = ApiClient.apiService.getMovieCredits(movieId)
     suspend fun getMovieReviews(movieId: Int) = ApiClient.apiService.getMovieReviews(movieId)
     suspend fun getMovieVideos(movieId: Int) = ApiClient.apiService.getMovieVideos(movieId)
+    suspend fun getSimilarMovies(movieId: Int) = ApiClient.apiService.getSimilarMovies(movieId)
 }
