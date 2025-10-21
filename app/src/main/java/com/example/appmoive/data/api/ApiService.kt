@@ -1,9 +1,13 @@
 package com.example.appmoive.data.api
 
+import com.example.appmoive.data.model.CreditsResponse
+import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.data.model.MovieResponse
+import com.example.appmoive.data.model.ReviewsResponse
 import com.example.appmoive.utils.Constants.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 // interface định nghĩa các lệnh API đến trang TMDB
 interface ApiService {
@@ -26,5 +30,21 @@ interface ApiService {
         @Query("page") page: Int
     ): Response<MovieResponse>
 
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<MovieDetail>
 
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<CreditsResponse>
+
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<ReviewsResponse>
 }

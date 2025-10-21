@@ -7,20 +7,21 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ActivityHomeBinding
-import com.example.appmoive.ui.adapters.BannerAdapter
-import com.example.appmoive.ui.adapters.MovieAdapter
-import com.example.appmoive.ui.adapters.TopRatedAdapter // <-- THAY ĐỔI 1: Import adapter mới
+import com.example.appmoive.ui.adapters.* // <-- Import tất cả adapter
+import com.example.appmoive.ui.detail.DetailActivity // <-- Import DetailActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
 
-class HomeActivity : AppCompatActivity() {
+// SỬA 1: Implement interface OnMovieClickListener
+class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
     private lateinit var binding: ActivityHomeBinding
     private val homeViewModel: HomeViewModel by viewModels()
 
     private lateinit var recommendedAdapter: MovieAdapter
     private lateinit var bannerAdapter: BannerAdapter
-    private lateinit var topRatedAdapter: TopRatedAdapter // <-- THAY ĐỔI 2: Khai báo adapter mới
+    private lateinit var topRatedAdapter: TopRatedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
         // Setup các RecyclerView và ViewPager2
         setupRecyclerView()
         setupBannerViewPager()
-        setupTopRatedRecyclerView() // Gọi hàm setup cho Top Rated
+        setupTopRatedRecyclerView()
 
         observeViewModel()
 
@@ -46,47 +47,53 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    // SỬA 2: Truyền "this" vào làm listener khi khởi tạo adapter
     private fun setupRecyclerView() {
-        recommendedAdapter = MovieAdapter(emptyList())
+        recommendedAdapter = MovieAdapter(emptyList(), this) // Thêm "this"
         binding.rvRecommended.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = recommendedAdapter
         }
     }
 
-    // THAY ĐỔI 3: Hàm setup cho Top Rated bây giờ sẽ dùng TopRatedAdapter
     private fun setupTopRatedRecyclerView() {
-        topRatedAdapter = TopRatedAdapter(emptyList()) // Khởi tạo adapter mới
+        topRatedAdapter = TopRatedAdapter(emptyList(), this) // Thêm "this"
         binding.rvTopRated.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
-            adapter = topRatedAdapter // Gán adapter mới
+            adapter = topRatedAdapter
         }
     }
 
     private fun setupBannerViewPager() {
-        bannerAdapter = BannerAdapter(emptyList())
+        bannerAdapter = BannerAdapter(emptyList(), this) // Thêm "this"
         binding.viewPagerBanner.adapter = bannerAdapter
     }
 
     private fun observeViewModel() {
         homeViewModel.popularMovies.observe(this) { movies ->
-            movies?.let {
-                recommendedAdapter.setData(it)
-            }
+            movies?.let { recommendedAdapter.setData(it) }
         }
 
         homeViewModel.trendingMovies.observe(this) { movies ->
-            movies?.let {
-                bannerAdapter.setData(it.take(5))
-            }
+            movies?.let { bannerAdapter.setData(it.take(5)) }
         }
 
-        // THAY ĐỔI 4: Observer bây giờ sẽ cập nhật cho topRatedAdapter
         homeViewModel.topRatedMovies.observe(this) { movies ->
-            movies?.let {
-                Log.d("HomeActivity", "Top Rated movies loaded: ${it.size} items")
-                topRatedAdapter.setData(it.take(10)) // Cập nhật cho adapter mới
-            }
+            movies?.let { topRatedAdapter.setData(it.take(10)) }
         }
+    }
+
+    // SỬA 3: Override lại hàm onMovieClick để xử lý sự kiện
+    override fun onMovieClick(movie: Movie) {
+        // Log để kiểm tra xem click có hoạt động không
+        Log.d("HomeActivity", "Clicked on movie: ${movie.title} (ID: ${movie.id})")
+
+        // Tạo Intent để mở DetailActivity
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            // Đặt ID của phim vào intent
+            putExtra("MOVIE_ID", movie.id)
+        }
+        // Khởi chạy DetailActivity
+        startActivity(intent)
     }
 }

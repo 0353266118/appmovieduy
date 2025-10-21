@@ -1,3 +1,4 @@
+// file: ui/adapters/MovieListAdapter.kt
 package com.example.appmoive.ui.adapters
 
 import android.view.LayoutInflater
@@ -5,10 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.appmoive.data.model.Movie
-import com.example.appmoive.databinding.ItemTopSearchBinding // <<-- Tên binding này phụ thuộc vào tên file XML của em
+import com.example.appmoive.databinding.ItemTopSearchBinding
 import com.example.appmoive.utils.Constants
 
-class MovieListAdapter(private var movies: MutableList<Movie>) : RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
+// SỬA 1: Thêm listener vào constructor
+class MovieListAdapter(
+    private var movies: MutableList<Movie>,
+    private val listener: OnMovieClickListener
+) : RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
 
     inner class MovieViewHolder(val binding: ItemTopSearchBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,7 +31,12 @@ class MovieListAdapter(private var movies: MutableList<Movie>) : RecyclerView.Ad
                 .load(Constants.IMAGE_BASE_URL + movie.posterPath)
                 .into(ivPoster)
             tvMovieTitle.text = movie.title
-            tvMovieGenre.text = "Action, Adventure" // Dữ liệu giả
+            tvMovieGenre.text = "Action, Adventure"
+        }
+
+        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+        holder.itemView.setOnClickListener {
+            listener.onMovieClick(movie)
         }
     }
 

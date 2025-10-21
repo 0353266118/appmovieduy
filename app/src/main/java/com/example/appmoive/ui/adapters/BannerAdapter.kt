@@ -9,7 +9,11 @@ import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ItemMovieBannerBinding
 import com.example.appmoive.utils.Constants
 
-class BannerAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
+// SỬA 1: Thêm listener vào constructor
+class BannerAdapter(
+    private var movies: List<Movie>,
+    private val listener: OnMovieClickListener
+) : RecyclerView.Adapter<BannerAdapter.BannerViewHolder>() {
 
     inner class BannerViewHolder(val binding: ItemMovieBannerBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -22,13 +26,7 @@ class BannerAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<Bann
 
     override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
         val movie = movies[position]
-
-        // Chọn ảnh để hiển thị: ưu tiên backdrop, nếu không có thì dùng poster
-        val imageUrl = if (!movie.backdropPath.isNullOrEmpty()) {
-            movie.backdropPath
-        } else {
-            movie.posterPath
-        }
+        val imageUrl = if (!movie.backdropPath.isNullOrEmpty()) movie.backdropPath else movie.posterPath
 
         holder.binding.apply {
             Glide.with(root.context)
@@ -36,7 +34,12 @@ class BannerAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<Bann
                 .into(ivBannerImage)
 
             tvBannerTitle.text = movie.title
-            tvBannerDescription.text = movie.overview // Lấy mô tả thật từ API
+            tvBannerDescription.text = movie.overview
+        }
+
+        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+        holder.itemView.setOnClickListener {
+            listener.onMovieClick(movie)
         }
     }
 

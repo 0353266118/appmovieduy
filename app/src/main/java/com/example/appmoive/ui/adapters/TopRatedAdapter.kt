@@ -9,9 +9,12 @@ import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ItemMoviePosterBinding
 import com.example.appmoive.utils.Constants
 
-class TopRatedAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<TopRatedAdapter.TopRatedViewHolder>() {
+// SỬA 1: Thêm listener vào constructor
+class TopRatedAdapter(
+    private var movies: List<Movie>,
+    private val listener: OnMovieClickListener
+) : RecyclerView.Adapter<TopRatedAdapter.TopRatedViewHolder>() {
 
-    // Đổi tên ViewHolder cho rõ ràng
     inner class TopRatedViewHolder(val binding: ItemMoviePosterBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRatedViewHolder {
@@ -29,7 +32,12 @@ class TopRatedAdapter(private var movies: List<Movie>) : RecyclerView.Adapter<To
                 .into(ivPoster)
 
             tvMovieTitle.text = movie.title
-            tvMovieGenre.text = "Action, Adventure" // Dữ liệu giả
+            tvMovieGenre.text = "Action, Adventure"
+        }
+
+        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+        holder.itemView.setOnClickListener {
+            listener.onMovieClick(movie)
         }
     }
 

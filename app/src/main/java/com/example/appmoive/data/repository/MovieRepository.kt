@@ -20,4 +20,7 @@ class MovieRepository {
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
         return ApiClient.apiService.getTopRatedMovies(page = page)
     }
+    suspend fun getMovieDetails(movieId: Int) = ApiClient.apiService.getMovieDetails(movieId)
+    suspend fun getMovieCredits(movieId: Int) = ApiClient.apiService.getMovieCredits(movieId)
+    suspend fun getMovieReviews(movieId: Int) = ApiClient.apiService.getMovieReviews(movieId)
 }
