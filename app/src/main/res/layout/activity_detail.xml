@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white"
+    android:background="@color/movie_backgroundColor_light"
     tools:context=".ui.detail.DetailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="24dp">
 
+        <!-- ... Phần ImageView và Title không đổi ... -->
         <ImageView
             android:id="@+id/iv_backdrop"
             android:layout_width="0dp"
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/movie_textColorPrimary_black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,30 +66,57 @@
             app:layout_constraintTop_toBottomOf="@id/iv_backdrop"
             tools:text="Tên phim" />
 
-        <TextView
-            android:id="@+id/tv_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_star"
-            android:drawablePadding="4dp"
-            android:drawableTint="#FFC107"
-            android:gravity="center"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/tv_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/tv_title_detail"
-            tools:text="8.5" />
+        <!-- ======================================================= -->
+        <!-- SỬA LẠI KHỐI NÀY: TÁCH THÀNH 2 HÀNG -->
+        <!-- ======================================================= -->
 
+        <!-- HÀNG 1: Rating và Runtime -->
         <LinearLayout
-            android:id="@+id/layout_info"
+            android:id="@+id/layout_info_row1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@id/tv_title_detail"
             app:layout_constraintStart_toStartOf="@id/tv_title_detail"
-            app:layout_constraintTop_toBottomOf="@id/tv_rating">
+            app:layout_constraintTop_toBottomOf="@id/tv_title_detail">
+
+            <TextView
+                android:id="@+id/tv_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_star"
+                android:drawablePadding="4dp"
+                android:drawableTint="#FFC107"
+                android:gravity="center"
+                android:textColor="@color/movie_textColorSecondary_grey"
+                android:textSize="14sp"
+                tools:text="8.7" />
+
+            <TextView
+                android:id="@+id/tv_runtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:drawableStart="@drawable/ic_link2"
+                android:drawablePadding="4dp"
+                android:gravity="center"
+                android:textColor="@color/movie_textColorSecondary_grey"
+                android:textSize="14sp"
+                tools:text="2h 22m" />
+
+        </LinearLayout>
+
+        <!-- HÀNG 2: Release Date và Genres -->
+        <LinearLayout
+            android:id="@+id/layout_info_row2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/tv_title_detail"
+            app:layout_constraintStart_toStartOf="@id/tv_title_detail"
+            app:layout_constraintTop_toBottomOf="@id/layout_info_row1">
 
             <TextView
                 android:id="@+id/tv_release_date"
@@ -97,7 +125,9 @@
                 android:drawableStart="@drawable/ic_calendar2"
                 android:drawablePadding="4dp"
                 android:gravity="center"
-                tools:text="2024" />
+                android:textColor="@color/movie_textColorSecondary_grey"
+                android:textSize="14sp"
+                tools:text="23/09/1994" />
 
             <TextView
                 android:id="@+id/tv_genres"
@@ -107,11 +137,14 @@
                 android:drawableStart="@drawable/ic_film2"
                 android:drawablePadding="4dp"
                 android:gravity="center"
-                tools:text="Action, Sci-Fi" />
-
-
+                android:textColor="@color/movie_textColorSecondary_grey"
+                android:textSize="14sp"
+                tools:text="Drama, Crime" />
 
         </LinearLayout>
+
+
+        <!-- ... Các phần còn lại của layout sẽ được constraint vào layout_info_row2 -->
         <Button
             android:id="@+id/btn_play_trailer"
             android:layout_width="0dp"
@@ -122,18 +155,18 @@
             android:visibility="gone"
             tools:visibility="visible"
             app:icon="@drawable/ic_play_arrow"
-            app:layout_constraintEnd_toEndOf="@id/layout_info"
-            app:layout_constraintStart_toStartOf="@id/layout_info"
-            app:layout_constraintTop_toBottomOf="@id/layout_info" />
+            app:layout_constraintEnd_toEndOf="@id/layout_info_row2"
+            app:layout_constraintStart_toStartOf="@id/layout_info_row2"
+            app:layout_constraintTop_toBottomOf="@id/layout_info_row2" />
 
-
+        <!-- ... Các phần còn lại của layout không đổi ... -->
         <TextView
             android:id="@+id/tv_overview_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Overview"
-            android:textColor="@android:color/black"
+            android:textColor="@color/movie_textColorPrimary_black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_title_detail"
@@ -145,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:lineSpacingExtra="4dp"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/movie_textColorSecondary_grey"
             app:layout_constraintEnd_toEndOf="@id/tv_title_detail"
             app:layout_constraintStart_toStartOf="@id/tv_title_detail"
             app:layout_constraintTop_toBottomOf="@id/tv_overview_label"
@@ -157,7 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Cast"
-            android:textColor="@android:color/black"
+            android:textColor="@color/movie_textColorPrimary_black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_overview_label"
@@ -184,7 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Reviews"
-            android:textColor="@android:color/black"
+            android:textColor="@color/movie_textColorPrimary_black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/tv_cast_label"
