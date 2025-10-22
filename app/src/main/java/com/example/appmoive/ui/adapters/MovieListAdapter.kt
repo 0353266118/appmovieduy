@@ -45,4 +45,10 @@ class MovieListAdapter(
         movies.addAll(newMovies)
         notifyItemRangeInserted(oldSize, newMovies.size)
     }
+    // MỚI: Thêm hàm này
+    fun setData(newMovies: List<Movie>) {
+        movies.clear()
+        movies.addAll(newMovies)
+        notifyDataSetChanged()
+    }
 }

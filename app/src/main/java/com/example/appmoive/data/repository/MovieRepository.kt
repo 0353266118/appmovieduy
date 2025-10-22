@@ -27,4 +27,5 @@ class MovieRepository {
     suspend fun getSimilarMovies(movieId: Int) = ApiClient.apiService.getSimilarMovies(movieId)
     suspend fun getActorMovies(personId: Int) = ApiClient.apiService.getActorMovies(personId)
     suspend fun getActorDetails(personId: Int) = ApiClient.apiService.getActorDetails(personId)
+    suspend fun searchMovies(query: String, page: Int) = ApiClient.apiService.searchMovies(query = query, page = page)
 }

@@ -76,4 +76,12 @@ interface ApiService {
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String = API_KEY
     ): Response<ActorDetail>
+
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("query") query: String, // Từ khóa tìm kiếm
+        @Query("page") page: Int
+    ): Response<MovieResponse>
 }

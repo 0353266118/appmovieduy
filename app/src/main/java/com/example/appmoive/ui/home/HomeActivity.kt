@@ -13,6 +13,7 @@ import com.example.appmoive.databinding.ActivityHomeBinding
 import com.example.appmoive.ui.adapters.*
 import com.example.appmoive.ui.detail.DetailActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
+import com.example.appmoive.ui.search.SearchActivity
 
 // Đảm bảo class implement OnMovieClickListener
 class HomeActivity : AppCompatActivity(), OnMovieClickListener {
@@ -46,6 +47,11 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
         binding.tvSeeAllRecommended.setOnClickListener {
             val intent = Intent(this, MovieListActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.ivSearch.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
     }
