@@ -2,6 +2,7 @@
 package com.example.appmoive.ui.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.appmoive.data.model.Review
@@ -23,8 +24,17 @@ class ReviewAdapter(private var reviewList: List<Review>) : RecyclerView.Adapter
         holder.binding.apply {
             tvReviewAuthor.text = review.author
             tvReviewContent.text = review.content
-            // RatingBar có numStars="10", nên ta cần chia đôi rating từ API (thang điểm 10)
-            rbReviewRating.rating = (review.authorDetails.rating / 2).toFloat()
+
+            // SỬA LẠI PHẦN NÀY
+            val ratingValue = review.authorDetails.rating
+            if (ratingValue != null) {
+                rbReviewRating.visibility = View.VISIBLE
+                // API trả về thang 10, RatingBar có 10 sao, không cần chia 2 nữa
+                rbReviewRating.rating = ratingValue.toFloat()
+            } else {
+                // Nếu không có rating, ẩn RatingBar đi
+                rbReviewRating.visibility = View.GONE
+            }
         }
     }
 

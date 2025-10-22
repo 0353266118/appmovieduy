@@ -1,3 +1,4 @@
+// file: ui/adapters/OnMovieClickListener.kt
 package com.example.appmoive.ui.adapters
 
 import com.example.appmoive.data.model.Movie

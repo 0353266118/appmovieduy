@@ -10,7 +10,11 @@ import com.example.appmoive.data.model.Cast
 import com.example.appmoive.databinding.ItemCastBinding
 import com.example.appmoive.utils.Constants
 
-class CastAdapter(private var castList: List<Cast>) : RecyclerView.Adapter<CastAdapter.CastViewHolder>() {
+// SỬA 1: Thêm listener vào constructor
+class CastAdapter(
+    private var castList: List<Cast>,
+    private val listener: OnActorClickListener
+) : RecyclerView.Adapter<CastAdapter.CastViewHolder>() {
 
     inner class CastViewHolder(val binding: ItemCastBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -28,9 +32,14 @@ class CastAdapter(private var castList: List<Cast>) : RecyclerView.Adapter<CastA
 
             Glide.with(root.context)
                 .load(Constants.IMAGE_BASE_URL + castMember.profilePath)
-                .placeholder(R.drawable.error_image) // Ảnh giữ chỗ nếu không có ảnh diễn viên
-                .error(R.drawable.error_image) // Ảnh hiển thị khi lỗi
+                .placeholder(R.drawable.ic_profile2)
+                .error(R.drawable.ic_profile2)
                 .into(ivCastPhoto)
+        }
+
+        // SỬA 2: Thêm sự kiện click
+        holder.itemView.setOnClickListener {
+            listener.onActorClick(castMember)
         }
     }
 

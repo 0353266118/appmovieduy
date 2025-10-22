@@ -10,9 +10,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.appmoive.data.model.Cast
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.databinding.ActivityDetailBinding
+import com.example.appmoive.ui.actormovies.ActorMoviesActivity
 import com.example.appmoive.ui.adapters.CastAdapter
 import com.example.appmoive.ui.adapters.MovieAdapter
 import com.example.appmoive.ui.adapters.OnMovieClickListener
@@ -21,7 +23,11 @@ import com.example.appmoive.utils.Constants.IMAGE_BASE_URL
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class DetailActivity : AppCompatActivity(), OnMovieClickListener {
+import com.example.appmoive.ui.adapters.OnActorClickListener
+
+
+
+class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickListener {
 
     private lateinit var binding: ActivityDetailBinding
     private val viewModel: DetailViewModel by viewModels()
@@ -51,7 +57,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener {
 
     private fun setupUI() {
         // Setup RecyclerView cho diễn viên
-        castAdapter = CastAdapter(emptyList())
+        castAdapter = CastAdapter(emptyList(), this)
         binding.rvCast.apply {
             layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = castAdapter
@@ -172,9 +178,17 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener {
         }
     }
     override fun onMovieClick(movie: Movie) {
-        // Mở một DetailActivity mới cho phim liên quan
         val intent = Intent(this, DetailActivity::class.java).apply {
             putExtra("MOVIE_ID", movie.id)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        startActivity(intent)
+    }
+    // SỬA: Hàm override cho click diễn viên
+    override fun onActorClick(actor: Cast) {
+        val intent = Intent(this, ActorMoviesActivity::class.java).apply {
+            putExtra("ACTOR_ID", actor.id)
+            putExtra("ACTOR_NAME", actor.name)
         }
         startActivity(intent)
     }

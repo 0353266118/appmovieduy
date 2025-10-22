@@ -1,5 +1,7 @@
 package com.example.appmoive.data.api
 
+import com.example.appmoive.data.model.ActorDetail
+import com.example.appmoive.data.model.ActorMoviesResponse
 import com.example.appmoive.data.model.CreditsResponse
 import com.example.appmoive.data.model.MovieDetail
 import com.example.appmoive.data.model.MovieResponse
@@ -61,4 +63,17 @@ interface ApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY
     ): Response<MovieResponse> // Tái sử dụng MovieResponse vì cấu trúc JSON giống nhau
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getActorMovies(
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<ActorMoviesResponse>
+
+
+    @GET("person/{person_id}")
+    suspend fun getActorDetails(
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String = API_KEY
+    ): Response<ActorDetail>
 }
