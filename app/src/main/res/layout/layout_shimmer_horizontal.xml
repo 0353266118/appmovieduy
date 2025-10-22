@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
+
+    <!-- Nhúng 5 item giả vào đây -->
+    <include layout="@layout/item_shimmer_movie" />
+    <include layout="@layout/item_shimmer_movie" />
+    <include layout="@layout/item_shimmer_movie" />
+    <include layout="@layout/item_shimmer_movie" />
+    <include layout="@layout/item_shimmer_movie" />
+
+</LinearLayout>

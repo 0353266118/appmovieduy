@@ -4,16 +4,17 @@ package com.example.appmoive.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ActivityHomeBinding
-import com.example.appmoive.ui.adapters.* // <-- Import tất cả adapter
-import com.example.appmoive.ui.detail.DetailActivity // <-- Import DetailActivity
+import com.example.appmoive.ui.adapters.*
+import com.example.appmoive.ui.detail.DetailActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
 
-// SỬA 1: Implement interface OnMovieClickListener
+// Đảm bảo class implement OnMovieClickListener
 class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
     private lateinit var binding: ActivityHomeBinding
@@ -28,80 +29,87 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Setup các RecyclerView và ViewPager2
+        // Bắt đầu chạy hiệu ứng Shimmer ngay khi activity được tạo
+        binding.shimmerRecommended.startShimmer()
+        // (Thêm dòng này nếu em đã làm shimmer cho Top Rated)
+        // binding.shimmerTopRated.startShimmer()
+
         setupRecyclerView()
         setupBannerViewPager()
         setupTopRatedRecyclerView()
 
         observeViewModel()
 
-        // Lấy dữ liệu
         homeViewModel.fetchPopularMovies()
         homeViewModel.fetchTrendingMovies()
         homeViewModel.fetchTopRatedMovies()
 
-        // Sự kiện click cho See All
         binding.tvSeeAllRecommended.setOnClickListener {
             val intent = Intent(this, MovieListActivity::class.java)
             startActivity(intent)
         }
     }
 
-    // SỬA 2: Truyền "this" vào làm listener khi khởi tạo adapter
     private fun setupRecyclerView() {
         recommendedAdapter = MovieAdapter(emptyList(), this)
         binding.rvRecommended.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = recommendedAdapter
-
-            // THÊM CÁC DÒNG NÀY VÀO
             setHasFixedSize(true)
             setItemViewCacheSize(20)
         }
     }
 
     private fun setupTopRatedRecyclerView() {
-        topRatedAdapter = TopRatedAdapter(emptyList(), this) // Thêm "this"
+        topRatedAdapter = TopRatedAdapter(emptyList(), this)
         binding.rvTopRated.apply {
             layoutManager = LinearLayoutManager(this@HomeActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = topRatedAdapter
-
-            // THÊM CÁC DÒNG NÀY VÀO
             setHasFixedSize(true)
             setItemViewCacheSize(20)
         }
     }
 
     private fun setupBannerViewPager() {
-        bannerAdapter = BannerAdapter(emptyList(), this) // Thêm "this"
+        bannerAdapter = BannerAdapter(emptyList(), this)
         binding.viewPagerBanner.adapter = bannerAdapter
     }
 
     private fun observeViewModel() {
         homeViewModel.popularMovies.observe(this) { movies ->
-            movies?.let { recommendedAdapter.setData(it) }
+            movies?.let {
+                // Tắt shimmer và hiện RecyclerView
+                binding.shimmerRecommended.stopShimmer()
+                binding.shimmerRecommended.visibility = View.GONE
+                binding.rvRecommended.visibility = View.VISIBLE
+
+                recommendedAdapter.setData(it)
+            }
         }
 
         homeViewModel.trendingMovies.observe(this) { movies ->
-            movies?.let { bannerAdapter.setData(it.take(5)) }
+            movies?.let {
+                // (Thêm logic shimmer cho banner nếu cần)
+                bannerAdapter.setData(it.take(5))
+            }
         }
 
         homeViewModel.topRatedMovies.observe(this) { movies ->
-            movies?.let { topRatedAdapter.setData(it.take(10)) }
+            movies?.let {
+                // (Thêm logic shimmer cho Top Rated nếu cần)
+                topRatedAdapter.setData(it.take(10))
+            }
         }
     }
 
-    // SỬA 3: Override lại hàm onMovieClick để xử lý sự kiện
+    // ================================================================
+    // HÀM onMovieClick NẰM Ở ĐÂY - NGANG HÀNG VỚI CÁC HÀM KHÁC
+    // ================================================================
     override fun onMovieClick(movie: Movie) {
-        // Log để kiểm tra xem click có hoạt động không
         Log.d("HomeActivity", "Clicked on movie: ${movie.title} (ID: ${movie.id})")
-
-        // Tạo Intent để mở DetailActivity
         val intent = Intent(this, DetailActivity::class.java).apply {
-            // Đặt ID của phim vào intent
             putExtra("MOVIE_ID", movie.id)
         }
-        // Khởi chạy DetailActivity
         startActivity(intent)
     }
 }

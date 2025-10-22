@@ -140,13 +140,31 @@
                     android:layout_centerVertical="true"
                     android:text="See All"
                     android:textColor="@color/movie_banner_background" />
+
+
+
             </RelativeLayout>
+
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_recommended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1000">
+
+
+            <include layout="@layout/layout_shimmer_horizontal" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recommended"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:visibility="invisible"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
                 android:paddingStart="16dp"
