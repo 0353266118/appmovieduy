@@ -51,7 +51,19 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         homeViewModel.fetchTopRatedMovies()
 
         binding.tvSeeAllRecommended.setOnClickListener {
-            val intent = Intent(this, MovieListActivity::class.java)
+            val intent = Intent(this, MovieListActivity::class.java).apply {
+                putExtra("LIST_TYPE", "popular")
+                putExtra("LIST_TITLE", "Recommended For You")
+            }
+            startActivity(intent)
+        }
+
+        // MỚI: Click vào See All của Top Rated
+        binding.tvSeeAllTopRated.setOnClickListener {
+            val intent = Intent(this, MovieListActivity::class.java).apply {
+                putExtra("LIST_TYPE", "top_rated")
+                putExtra("LIST_TITLE", "Top Rated Movies")
+            }
             startActivity(intent)
         }
 

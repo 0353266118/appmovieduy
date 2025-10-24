@@ -7,17 +7,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.appmoive.data.local.AppDatabase // Sửa lại import nếu cần
+import com.example.appmoive.data.local.AppDatabase
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
 class MovieListViewModel(application: Application) : AndroidViewModel(application) {
+
     private val repository: MovieRepository
     private var currentPage = 1
-
-    // SỬA: Chỉ khai báo isFetching một lần duy nhất
     private var isFetching = false
+
+    // Biến mới để xác định loại danh sách cần tải
+    var listType: String = "popular" // Giá trị mặc định
 
     init {
         val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
@@ -30,7 +32,8 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    fun fetchPopularMovies() {
+    // Hàm "đa năng" mới để tải phim
+    fun fetchMovies() {
         if (isFetching) {
             return
         }
@@ -39,14 +42,19 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
 
         viewModelScope.launch {
             try {
-                val response = repository.getPopularMovies(page = currentPage)
+                // Sử dụng 'when' để quyết định gọi API nào dựa trên listType
+                val response = when (listType) {
+                    "top_rated" -> repository.getTopRatedMovies(page = currentPage)
+                    else -> repository.getPopularMovies(page = currentPage) // Mặc định là 'popular'
+                }
+
                 if (response.isSuccessful) {
                     response.body()?.movies?.let {
                         _movies.postValue(it)
                         currentPage++
                     }
                 } else {
-                    Log.e("MovieListViewModel", "Error: ${response.code()}")
+                    Log.e("MovieListViewModel", "Error fetching '$listType' movies: ${response.code()}")
                 }
             } catch (e: Exception) {
                 Log.e("MovieListViewModel", "Exception: ${e.message}")

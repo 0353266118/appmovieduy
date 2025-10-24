@@ -1,6 +1,3 @@
-
-
-// file: ui/movielist/MovieListActivity.kt
 package com.example.appmoive.ui.movielist
 
 import android.content.Intent
@@ -14,10 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ActivityMovieListBinding
 import com.example.appmoive.ui.adapters.MovieListAdapter
-import com.example.appmoive.ui.adapters.OnMovieClickListener // <-- SỬA 1: Import interface
+import com.example.appmoive.ui.adapters.OnMovieClickListener
 import com.example.appmoive.ui.detail.DetailActivity
 
-// SỬA 2: Implement interface OnMovieClickListener
 class MovieListActivity : AppCompatActivity(), OnMovieClickListener {
 
     private lateinit var binding: ActivityMovieListBinding
@@ -29,19 +25,31 @@ class MovieListActivity : AppCompatActivity(), OnMovieClickListener {
         binding = ActivityMovieListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.ivBack.setOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
+        // 1. Nhận dữ liệu từ Intent
+        val listType = intent.getStringExtra("LIST_TYPE") ?: "popular"
+        val listTitle = intent.getStringExtra("LIST_TITLE") ?: "Movies"
 
+        // 2. Gán dữ liệu nhận được cho ViewModel và UI
+        viewModel.listType = listType
+        binding.tvHeaderTitle.text = listTitle
+
+        // 3. Setup các thành phần còn lại
+        setupUI()
         setupRecyclerView()
         observeViewModel()
 
-        viewModel.fetchPopularMovies()
+        // 4. Gọi hàm tải phim "đa năng" mới
+        viewModel.fetchMovies()
+    }
+
+    private fun setupUI() {
+        binding.ivBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     private fun setupRecyclerView() {
-        // SỬA 3: Truyền "this" vào làm listener khi khởi tạo adapter
-        movieListAdapter = MovieListAdapter(mutableListOf(), this) // Tự động showFavoriteIcon = false
+        movieListAdapter = MovieListAdapter(mutableListOf(), this)
         binding.rvMovieList.apply {
             layoutManager = LinearLayoutManager(this@MovieListActivity)
             adapter = movieListAdapter
@@ -54,7 +62,8 @@ class MovieListActivity : AppCompatActivity(), OnMovieClickListener {
                     val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
                     if (viewModel.isLoading.value != true && totalItemCount <= lastVisibleItemPosition + 3) {
-                        viewModel.fetchPopularMovies()
+                        // 5. Gọi hàm tải phim "đa năng" mới khi cuộn
+                        viewModel.fetchMovies()
                     }
                 }
             })
@@ -73,17 +82,11 @@ class MovieListActivity : AppCompatActivity(), OnMovieClickListener {
         }
     }
 
-    // SỬA 4: Override lại hàm onMovieClick để xử lý sự kiện
     override fun onMovieClick(movie: Movie) {
-        // Log để kiểm tra
         Log.d("MovieListActivity", "Clicked on movie: ${movie.title} (ID: ${movie.id})")
-
-        // Tạo Intent để mở DetailActivity
         val intent = Intent(this, DetailActivity::class.java).apply {
-            // Đặt ID của phim vào intent
             putExtra("MOVIE_ID", movie.id)
         }
-        // Khởi chạy DetailActivity
         startActivity(intent)
     }
 }
