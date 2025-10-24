@@ -1,18 +1,26 @@
 // file: ui/home/HomeViewModel.kt
 package com.example.appmoive.ui.home
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.appmoive.data.local.AppDatabase
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = MovieRepository()
+    private val repository: MovieRepository
+
+    init {
+        val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
+        repository = MovieRepository(favoriteMovieDao)
+    }
 
     // Giữ nguyên
     private val _popularMovies = MutableLiveData<List<Movie>>()

@@ -41,7 +41,7 @@ class MovieListActivity : AppCompatActivity(), OnMovieClickListener {
 
     private fun setupRecyclerView() {
         // SỬA 3: Truyền "this" vào làm listener khi khởi tạo adapter
-        movieListAdapter = MovieListAdapter(mutableListOf(), this) // Thêm "this"
+        movieListAdapter = MovieListAdapter(mutableListOf(), this) // Tự động showFavoriteIcon = false
         binding.rvMovieList.apply {
             layoutManager = LinearLayoutManager(this@MovieListActivity)
             adapter = movieListAdapter

@@ -1,16 +1,26 @@
+// file: ui/actormovies/ActorMoviesViewModel.kt
 package com.example.appmoive.ui.actormovies
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.appmoive.data.local.AppDatabase // Sửa lại import nếu cần
 import com.example.appmoive.data.model.ActorDetail
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
-class ActorMoviesViewModel : ViewModel() {
-    private val repository = MovieRepository()
+class ActorMoviesViewModel(application: Application) : AndroidViewModel(application) {
+    // SỬA: Chỉ khai báo, không khởi tạo ở đây
+    private val repository: MovieRepository
+
+    init {
+        val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
+        // Gán giá trị lần đầu và duy nhất trong init
+        repository = MovieRepository(favoriteMovieDao)
+    }
 
     // LiveData cho chi tiết diễn viên
     private val _actorDetails = MutableLiveData<ActorDetail>()

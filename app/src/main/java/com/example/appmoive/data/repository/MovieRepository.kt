@@ -4,12 +4,16 @@ import com.example.appmoive.data.api.ApiClient
 import com.example.appmoive.data.model.MovieResponse
 import retrofit2.Response
 
+import com.example.appmoive.data.local.FavoriteMovieDao
+import com.example.appmoive.data.model.FavoriteMovie
+import kotlinx.coroutines.flow.Flow
+
 
 // nhà kho quyết định xem lấy phim từ API hay ROOM database
 
 // Repository không cần nhận ApiService qua constructor nữa
 // vì nó có thể lấy trực tiếp từ ApiClient singleton
-class MovieRepository {
+class MovieRepository(private val favoriteMovieDao: FavoriteMovieDao) {
 
     suspend fun getPopularMovies(page: Int): Response<MovieResponse> {
         return ApiClient.apiService.getPopularMovies(page = page)
@@ -19,6 +23,21 @@ class MovieRepository {
     }
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
         return ApiClient.apiService.getTopRatedMovies(page = page)
+    }
+    fun getAllFavoriteMovies(): Flow<List<FavoriteMovie>> {
+        return favoriteMovieDao.getAllFavoriteMovies()
+    }
+
+    suspend fun isFavorite(movieId: Int): Boolean {
+        return favoriteMovieDao.getFavoriteMovieById(movieId) != null
+    }
+
+    suspend fun addToFavorites(movie: FavoriteMovie) {
+        favoriteMovieDao.insert(movie)
+    }
+
+    suspend fun removeFromFavorites(movie: FavoriteMovie) {
+        favoriteMovieDao.delete(movie)
     }
     suspend fun getMovieDetails(movieId: Int) = ApiClient.apiService.getMovieDetails(movieId)
     suspend fun getMovieCredits(movieId: Int) = ApiClient.apiService.getMovieCredits(movieId)

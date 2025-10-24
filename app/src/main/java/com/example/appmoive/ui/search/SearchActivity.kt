@@ -51,7 +51,7 @@ class SearchActivity : AppCompatActivity(), OnMovieClickListener {
     }
 
     private fun setupRecyclerView() {
-        searchAdapter = MovieListAdapter(mutableListOf(), this)
+        searchAdapter = MovieListAdapter(mutableListOf(), this) // Tự động showFavoriteIcon = false
         binding.rvSearchResults.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = searchAdapter

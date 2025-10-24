@@ -8,10 +8,12 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.appmoive.R
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ActivityHomeBinding
 import com.example.appmoive.ui.adapters.*
 import com.example.appmoive.ui.detail.DetailActivity
+import com.example.appmoive.ui.favorites.FavoritesActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
 import com.example.appmoive.ui.search.SearchActivity
 
@@ -38,6 +40,9 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         setupRecyclerView()
         setupBannerViewPager()
         setupTopRatedRecyclerView()
+        // BẮT ĐẦU PHẦN CODE MỚI CHO BOTTOM NAVIGATION
+        // ================================================================
+        setupBottomNavigation()
 
         observeViewModel()
 
@@ -53,6 +58,40 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         binding.ivSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    // MỚI: Hàm để thiết lập BottomNavigationView
+    private fun setupBottomNavigation() {
+        // Đảm bảo item "Home" được chọn khi khởi động
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    // Hiện tại đang ở màn hình Home, nên không cần làm gì
+                    // Hoặc có thể cuộn lên đầu trang
+                    binding.nestedScrollView.smoothScrollTo(0, 0)
+                    true // Trả về true để báo hiệu sự kiện đã được xử lý
+                }
+                R.id.nav_search -> {
+                    // Mở SearchActivity
+                    val intent = Intent(this, SearchActivity::class.java)
+                    startActivity(intent)
+                    // overridePendingTransition(0, 0) // Tùy chọn: tắt animation chuyển cảnh
+                    true
+                }
+                R.id.nav_favorites -> {
+                    val intent = Intent(this, FavoritesActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.nav_profile -> {
+                    // TODO: Mở màn hình Profile (sẽ làm sau)
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -117,5 +156,11 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
             putExtra("MOVIE_ID", movie.id)
         }
         startActivity(intent)
+    }
+    // MỚI: Xử lý khi quay lại HomeActivity từ màn hình khác
+    override fun onResume() {
+        super.onResume()
+        // Đảm bảo item "Home" luôn được chọn khi người dùng quay lại màn hình này
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
     }
 }

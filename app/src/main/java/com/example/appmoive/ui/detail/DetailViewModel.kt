@@ -1,19 +1,23 @@
+// file: ui/detail/DetailViewModel.kt
 package com.example.appmoive.ui.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.appmoive.data.model.Cast
-import com.example.appmoive.data.model.Movie
-import com.example.appmoive.data.model.MovieDetail
-import com.example.appmoive.data.model.Review
+import android.app.Application
+import androidx.lifecycle.*
+import com.example.appmoive.data.local.AppDatabase
+import com.example.appmoive.data.model.*
 import com.example.appmoive.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
-// file: ui/detail/DetailViewModel.kt
-class DetailViewModel : ViewModel() {
-    private val repository = MovieRepository()
+// SỬA 1: Kế thừa từ AndroidViewModel(application)
+class DetailViewModel(application: Application) : AndroidViewModel(application) {
+
+    // SỬA 2: Khai báo và khởi tạo repository trong khối init
+    private val repository: MovieRepository
+
+    init {
+        val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
+        repository = MovieRepository(favoriteMovieDao)
+    }
 
     private val _movieDetails = MutableLiveData<MovieDetail>()
     val movieDetails: LiveData<MovieDetail> = _movieDetails
@@ -23,51 +27,61 @@ class DetailViewModel : ViewModel() {
 
     private val _reviews = MutableLiveData<List<Review>>()
     val reviews: LiveData<List<Review>> = _reviews
-    // MỚI: LiveData để lưu key của video trailer
+
     private val _trailerKey = MutableLiveData<String?>()
     val trailerKey: LiveData<String?> = _trailerKey
 
     private val _similarMovies = MutableLiveData<List<Movie>>()
     val similarMovies: LiveData<List<Movie>> = _similarMovies
 
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> = _isFavorite
+
     fun fetchAllData(movieId: Int) {
         viewModelScope.launch {
-            // Lấy chi tiết phim
+            _isFavorite.postValue(repository.isFavorite(movieId))
+
             val detailsResponse = repository.getMovieDetails(movieId)
             if (detailsResponse.isSuccessful) {
                 _movieDetails.postValue(detailsResponse.body())
             }
 
-            // Lấy danh sách diễn viên
             val creditsResponse = repository.getMovieCredits(movieId)
             if (creditsResponse.isSuccessful) {
                 _cast.postValue(creditsResponse.body()?.cast)
             }
 
-
-            // Lấy danh sách reviews
             val reviewsResponse = repository.getMovieReviews(movieId)
             if (reviewsResponse.isSuccessful) {
                 _reviews.postValue(reviewsResponse.body()?.results)
             }
 
-            // Lấy danh sách video
             val videosResponse = repository.getMovieVideos(movieId)
             if (videosResponse.isSuccessful) {
-                // Tìm video đầu tiên là "Trailer" trên trang "YouTube"
-                val officialTrailer = videosResponse.body()?.results?.find { video ->
-                    video.site == "YouTube" && video.type == "Trailer"
-                }
-                // Cập nhật LiveData với key của trailer tìm được (hoặc null nếu không có)
+                val officialTrailer = videosResponse.body()?.results?.find { it.site == "YouTube" && it.type == "Trailer" }
                 _trailerKey.postValue(officialTrailer?.key)
             }
 
-            // MỚI: Lấy danh sách phim liên quan
             val similarResponse = repository.getSimilarMovies(movieId)
             if (similarResponse.isSuccessful) {
                 _similarMovies.postValue(similarResponse.body()?.movies)
             }
+        }
+    }
 
+    fun addToFavorites(movie: MovieDetail) {
+        viewModelScope.launch {
+            val favoriteMovie = FavoriteMovie(movie.id, movie.title, movie.posterPath ?: "", movie.overview)
+            repository.addToFavorites(favoriteMovie)
+            _isFavorite.postValue(true)
+        }
+    }
+
+    fun removeFromFavorites(movie: MovieDetail) {
+        viewModelScope.launch {
+            val favoriteMovie = FavoriteMovie(movie.id, movie.title, movie.posterPath ?: "", movie.overview)
+            repository.removeFromFavorites(favoriteMovie)
+            _isFavorite.postValue(false)
         }
     }
 }

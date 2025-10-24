@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.appmoive.R
 import com.example.appmoive.data.model.Cast
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.model.MovieDetail
@@ -37,6 +38,8 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
 
     // Biến để lưu trữ key của trailer
     private var currentTrailerKey: String? = null
+
+    private var currentMovieDetail: MovieDetail? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +77,16 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
                 playYouTubeTrailer(key)
             }
         }
+        // MỚI: Thêm sự kiện click cho icon trái tim
+        binding.ivFavorite.setOnClickListener {
+            currentMovieDetail?.let { movie ->
+                if (viewModel.isFavorite.value == true) {
+                    viewModel.removeFromFavorites(movie)
+                } else {
+                    viewModel.addToFavorites(movie)
+                }
+            }
+        }
 
         binding.ivBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
@@ -88,6 +101,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
     private fun observeViewModel() {
         viewModel.movieDetails.observe(this) { details ->
             details?.let {
+                currentMovieDetail = it
                 binding.apply {
                     Glide.with(this@DetailActivity).load(IMAGE_BASE_URL + it.backdropPath).into(ivBackdrop)
                     tvTitleDetail.text = it.title
@@ -137,6 +151,14 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
                 similarMoviesAdapter.setData(it)
             }
         }
+        viewModel.isFavorite.observe(this) { isFavorite ->
+            if (isFavorite) {
+                binding.ivFavorite.setImageResource(R.drawable.ic_favorite_filled)
+            } else {
+                binding.ivFavorite.setImageResource(R.drawable.ic_favorite_border)
+            }
+        }
+
     }
     private fun formatRuntime(minutes: Int?): String {
         if (minutes == null || minutes <= 0) {

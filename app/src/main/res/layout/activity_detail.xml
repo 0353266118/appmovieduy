@@ -50,7 +50,7 @@
             android:src="@drawable/ic_favorite_border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/movie_banner_background" />
 
         <TextView
             android:id="@+id/tv_title_detail"

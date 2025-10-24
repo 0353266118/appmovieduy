@@ -2,6 +2,7 @@
 package com.example.appmoive.ui.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -9,10 +10,10 @@ import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ItemTopSearchBinding
 import com.example.appmoive.utils.Constants
 
-// SỬA 1: Thêm listener vào constructor
 class MovieListAdapter(
     private var movies: MutableList<Movie>,
-    private val listener: OnMovieClickListener
+    private val listener: OnMovieClickListener,
+    private val showFavoriteIcon: Boolean = false
 ) : RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
 
     inner class MovieViewHolder(val binding: ItemTopSearchBinding) : RecyclerView.ViewHolder(binding.root)
@@ -31,10 +32,17 @@ class MovieListAdapter(
                 .load(Constants.IMAGE_BASE_URL + movie.posterPath)
                 .into(ivPoster)
             tvMovieTitle.text = movie.title
-            tvMovieGenre.text = "Action, Adventure"
+            tvMovieGenre.text = "Action, Adventure" // Dữ liệu giả
+
+            // SỬA 2: DI CHUYỂN KHỐI IF VÀO TRONG NÀY
+            if (showFavoriteIcon) {
+                ivItemFavorite.visibility = View.VISIBLE
+            } else {
+                ivItemFavorite.visibility = View.GONE
+            }
         }
 
-        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+        // Sự kiện click cho toàn bộ item vẫn nằm ở ngoài
         holder.itemView.setOnClickListener {
             listener.onMovieClick(movie)
         }
@@ -45,7 +53,7 @@ class MovieListAdapter(
         movies.addAll(newMovies)
         notifyItemRangeInserted(oldSize, newMovies.size)
     }
-    // MỚI: Thêm hàm này
+
     fun setData(newMovies: List<Movie>) {
         movies.clear()
         movies.addAll(newMovies)

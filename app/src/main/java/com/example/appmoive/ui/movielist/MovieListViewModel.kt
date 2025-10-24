@@ -1,18 +1,28 @@
 // file: ui/movielist/MovieListViewModel.kt
 package com.example.appmoive.ui.movielist
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.appmoive.data.local.AppDatabase // Sửa lại import nếu cần
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.data.repository.MovieRepository
 import kotlinx.coroutines.launch
 
-class MovieListViewModel : ViewModel() {
-    private val repository = MovieRepository()
+class MovieListViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: MovieRepository
     private var currentPage = 1
+
+    // SỬA: Chỉ khai báo isFetching một lần duy nhất
+    private var isFetching = false
+
+    init {
+        val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
+        repository = MovieRepository(favoriteMovieDao)
+    }
 
     private val _movies = MutableLiveData<List<Movie>>()
     val movies: LiveData<List<Movie>> = _movies
@@ -20,16 +30,10 @@ class MovieListViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // SỬA LỖI: Thêm một biến cờ để kiểm soát việc gọi API
-    private var isFetching = false
-
     fun fetchPopularMovies() {
-        // KIỂM TRA CỜ: Nếu đang fetch rồi thì không làm gì cả
         if (isFetching) {
             return
         }
-
-        // ĐẶT CỜ: Đánh dấu là bắt đầu fetch
         isFetching = true
         _isLoading.postValue(true)
 
@@ -39,7 +43,7 @@ class MovieListViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     response.body()?.movies?.let {
                         _movies.postValue(it)
-                        currentPage++ // Chỉ tăng trang khi gọi API thành công
+                        currentPage++
                     }
                 } else {
                     Log.e("MovieListViewModel", "Error: ${response.code()}")
@@ -47,8 +51,6 @@ class MovieListViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("MovieListViewModel", "Exception: ${e.message}")
             } finally {
-                // HẠ CỜ: Dù thành công hay thất bại, cuối cùng cũng phải hạ cờ xuống
-                // để cho phép lần gọi tiếp theo
                 isFetching = false
                 _isLoading.postValue(false)
             }
