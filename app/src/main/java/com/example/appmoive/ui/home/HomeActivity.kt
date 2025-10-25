@@ -16,6 +16,7 @@ import com.example.appmoive.ui.detail.DetailActivity
 import com.example.appmoive.ui.favorites.FavoritesActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
 import com.example.appmoive.ui.search.SearchActivity
+import com.example.appmoive.ui.settings.SettingsActivity
 
 // Đảm bảo class implement OnMovieClickListener
 class HomeActivity : AppCompatActivity(), OnMovieClickListener {
@@ -99,7 +100,9 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
                     true
                 }
                 R.id.nav_profile -> {
-                    // TODO: Mở màn hình Profile (sẽ làm sau)
+                    // MỞ MÀN HÌNH SETTINGS
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false

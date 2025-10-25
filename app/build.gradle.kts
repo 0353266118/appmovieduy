@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt) // <<-- SỬA LẠI DÒNG NÀY
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -75,4 +76,7 @@ dependencies {
     // UI Libraries
     implementation(libs.youtube.player)
     implementation(libs.shimmer)
+
+    implementation(platform(libs.firebase.bom)) 
+    implementation(libs.firebase.auth.ktx)
 }

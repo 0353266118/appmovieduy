@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "619727519537",
+    "project_id": "appmovie-86737",
+    "storage_bucket": "appmovie-86737.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619727519537:android:c054ce4fc13510dbf6ba10",
+        "android_client_info": {
+          "package_name": "com.example.appmoive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI1mYMSnU9iZj9nhe2VQx4w2yInxFrHYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
