@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.appmoive.databinding.ActivitySettingsBinding
 import com.example.appmoive.ui.auth.LoginActivity
+import com.example.appmoive.ui.profile.ChangePasswordActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity() {
@@ -34,6 +35,11 @@ class SettingsActivity : AppCompatActivity() {
         // Nút Logout
         binding.layoutLogout.setOnClickListener {
             showLogoutConfirmationDialog()
+        }
+        // MỚI: Thêm sự kiện click cho Change Password
+        binding.layoutChangePassword.setOnClickListener {
+            val intent = Intent(this, ChangePasswordActivity::class.java)
+            startActivity(intent)
         }
     }
 
