@@ -76,22 +76,22 @@
                         android:textColor="@color/movie_textColorSecondary_grey" />
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/iv_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_notification" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_notification"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:padding="8dp"-->
+<!--                    android:src="@drawable/ic_notification"-->
+<!--                    />-->
 
                 <ImageView
                     android:id="@+id/iv_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="8dp"
-                    android:layout_toStartOf="@id/iv_notification"
                     android:padding="8dp"
                     android:src="@drawable/ic_search" />
             </RelativeLayout>

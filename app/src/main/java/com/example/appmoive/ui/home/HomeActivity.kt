@@ -18,6 +18,7 @@ import com.example.appmoive.ui.movielist.MovieListActivity
 import com.example.appmoive.ui.search.SearchActivity
 import com.example.appmoive.ui.settings.SettingsActivity
 import com.bumptech.glide.Glide
+import com.example.appmoive.ui.genres.GenresActivity
 import com.google.firebase.auth.FirebaseAuth
 
 // Đảm bảo class implement OnMovieClickListener
@@ -87,6 +88,7 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         super.onResume()
         // Mỗi khi quay lại màn hình Home, tải lại thông tin user để cập nhật tên/ảnh mới
         loadUserProfile()
+        binding.bottomNavigation.selectedItemId = R.id.nav_home
     }
 
     private fun loadUserProfile() {
@@ -129,10 +131,9 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
                     true // Trả về true để báo hiệu sự kiện đã được xử lý
                 }
                 R.id.nav_search -> {
-                    // Mở SearchActivity
-                    val intent = Intent(this, SearchActivity::class.java)
+                    // SỬA: Mở GenresActivity thay vì SearchActivity
+                    val intent = Intent(this, GenresActivity::class.java)
                     startActivity(intent)
-                    // overridePendingTransition(0, 0) // Tùy chọn: tắt animation chuyển cảnh
                     true
                 }
                 R.id.nav_favorites -> {
