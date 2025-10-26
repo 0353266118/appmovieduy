@@ -79,4 +79,6 @@ dependencies {
 
     implementation(platform(libs.firebase.bom)) 
     implementation(libs.firebase.auth.ktx)
+
+    implementation("com.google.firebase:firebase-storage-ktx")
 }

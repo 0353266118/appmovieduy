@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.appmoive.databinding.ActivitySettingsBinding
 import com.example.appmoive.ui.auth.LoginActivity
 import com.example.appmoive.ui.profile.ChangePasswordActivity
+import com.example.appmoive.ui.profile.EditProfileActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity() {
@@ -39,6 +40,11 @@ class SettingsActivity : AppCompatActivity() {
         // MỚI: Thêm sự kiện click cho Change Password
         binding.layoutChangePassword.setOnClickListener {
             val intent = Intent(this, ChangePasswordActivity::class.java)
+            startActivity(intent)
+        }
+        // MỚI: Thêm sự kiện click cho Edit Profile
+        binding.layoutEditProfile.setOnClickListener {
+            val intent = Intent(this, EditProfileActivity::class.java)
             startActivity(intent)
         }
     }
