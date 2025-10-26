@@ -18,6 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import android.text.InputType
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 
 
 class LoginActivity : AppCompatActivity() {
@@ -63,11 +66,7 @@ class LoginActivity : AppCompatActivity() {
         // Sự kiện click nút "Continue"
         binding.btnContinue.setOnClickListener {
 
-//            // MỚI: Sự kiện click cho nút "Continue with Google"
-//            binding.btnGoogle.setOnClickListener {
-//                val signInIntent = googleSignInClient.signInIntent
-//                googleSignInLauncher.launch(signInIntent)
-//            }
+
 
             val email = binding.etEmail.text.toString().trim()
             val pass = binding.etPassword.text.toString().trim()
@@ -78,6 +77,12 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // MỚI: Sự kiện click cho "Forgot Password?"
+        binding.tvForgotPassword.setOnClickListener {
+            showForgotPasswordDialog()
+        }
+
         // MỚI: Sự kiện click cho nút "Continue with Google"
         binding.btnGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
@@ -89,6 +94,33 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    // MỚI: Hàm hiển thị hộp thoại quên mật khẩu
+    private fun showForgotPasswordDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Reset Password")
+
+        // Tạo một EditText để người dùng nhập email
+        val input = EditText(this)
+        input.hint = "Enter your email"
+        input.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        builder.setView(input)
+
+        builder.setPositiveButton("Send") { dialog, _ ->
+            val email = input.text.toString().trim()
+            if (email.isNotEmpty()) {
+                viewModel.sendPasswordResetEmail(email)
+                // Hiển thị thông báo chung chung
+                Toast.makeText(this, "If your email is registered, you will receive a reset link.", Toast.LENGTH_LONG).show()
+            }
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        builder.show()
     }
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)

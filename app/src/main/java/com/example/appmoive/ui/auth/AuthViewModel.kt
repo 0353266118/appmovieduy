@@ -47,4 +47,17 @@ class AuthViewModel : ViewModel() {
                 _isLoading.postValue(false)
             }
     }
+    // MỚI: Thêm hàm gửi email reset password
+    fun sendPasswordResetEmail(email: String) {
+        _isLoading.postValue(true)
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Không cần thông báo thành công ở đây, để Activity tự xử lý
+                } else {
+                    _errorMessage.postValue(task.exception?.message ?: "Failed to send reset email.")
+                }
+                _isLoading.postValue(false)
+            }
+    }
 }
