@@ -17,10 +17,13 @@ import com.example.appmoive.ui.favorites.FavoritesActivity
 import com.example.appmoive.ui.movielist.MovieListActivity
 import com.example.appmoive.ui.search.SearchActivity
 import com.example.appmoive.ui.settings.SettingsActivity
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 
 // Đảm bảo class implement OnMovieClickListener
 class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
+    private lateinit var firebaseAuth: FirebaseAuth // <<-- THÊM BIẾN NÀY
     private lateinit var binding: ActivityHomeBinding
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -32,6 +35,12 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Khởi tạo Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        // Tải thông tin người dùng
+        loadUserProfile()
 
         // Bắt đầu chạy hiệu ứng Shimmer ngay khi activity được tạo
         binding.shimmerRecommended.startShimmer()
@@ -71,6 +80,38 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         binding.ivSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Mỗi khi quay lại màn hình Home, tải lại thông tin user để cập nhật tên/ảnh mới
+        loadUserProfile()
+    }
+
+    private fun loadUserProfile() {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            // Có người dùng đăng nhập
+            val username = user.displayName
+            if (!username.isNullOrEmpty()) {
+                binding.tvGreetingName.text = "Hi, $username"
+            } else {
+                // Nếu user chưa đặt tên, hiển thị email
+                binding.tvGreetingName.text = "Hi, ${user.email}"
+            }
+
+            // Tải ảnh đại diện
+            if (user.photoUrl != null) {
+                Glide.with(this).load(user.photoUrl).into(binding.ivAvatar)
+            } else {
+                // Nếu không có ảnh, dùng ảnh mặc định
+                binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar) // Dùng cùng ảnh mặc định
+            }
+        } else {
+            // Trường hợp không có ai đăng nhập (lỗi hoặc đã đăng xuất)
+            // Có thể chuyển về màn hình Login ở đây nếu cần
+            binding.tvGreetingName.text = "Hi, Guest"
         }
     }
 
@@ -173,9 +214,9 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         startActivity(intent)
     }
     // MỚI: Xử lý khi quay lại HomeActivity từ màn hình khác
-    override fun onResume() {
-        super.onResume()
-        // Đảm bảo item "Home" luôn được chọn khi người dùng quay lại màn hình này
-        binding.bottomNavigation.selectedItemId = R.id.nav_home
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        // Đảm bảo item "Home" luôn được chọn khi người dùng quay lại màn hình này
+//        binding.bottomNavigation.selectedItemId = R.id.nav_home
+//    }
 }
