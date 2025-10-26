@@ -14,9 +14,11 @@ interface FavoriteMovieDao {
     @Delete
     suspend fun delete(movie: FavoriteMovie)
 
-    @Query("SELECT * FROM favorite_movies")
-    fun getAllFavoriteMovies(): Flow<List<FavoriteMovie>> // Dùng Flow để tự động cập nhật UI
+    // SỬA: Thêm điều kiện userId vào câu lệnh SELECT
+    @Query("SELECT * FROM favorite_movies WHERE userId = :userId")
+    fun getAllFavoriteMovies(userId: String): Flow<List<FavoriteMovie>>
 
-    @Query("SELECT * FROM favorite_movies WHERE id = :movieId")
-    suspend fun getFavoriteMovieById(movieId: Int): FavoriteMovie?
+    // SỬA: Thêm điều kiện userId vào câu lệnh SELECT
+    @Query("SELECT * FROM favorite_movies WHERE id = :movieId AND userId = :userId")
+    suspend fun getFavoriteMovieById(movieId: Int, userId: String): FavoriteMovie?
 }

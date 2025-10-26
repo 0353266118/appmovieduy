@@ -4,10 +4,14 @@ package com.example.appmoive.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favorite_movies")
+// SỬA 1: Khai báo khóa chính σύνθετη
+@Entity(tableName = "favorite_movies", primaryKeys = ["id", "userId"])
 data class FavoriteMovie(
-    @PrimaryKey val id: Int,
+    val id: Int,
     val title: String,
     val posterPath: String,
-    val overview: String // Thêm các trường cần thiết để hiển thị trong danh sách
+    val overview: String,
+
+    // SỬA 2: Thêm trường để lưu ID của người dùng
+    val userId: String
 )

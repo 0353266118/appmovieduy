@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.Flow
 // vì nó có thể lấy trực tiếp từ ApiClient singleton
 class MovieRepository(private val favoriteMovieDao: FavoriteMovieDao) {
 
+
+
     suspend fun getPopularMovies(page: Int): Response<MovieResponse> {
         return ApiClient.apiService.getPopularMovies(page = page)
     }
@@ -24,12 +26,12 @@ class MovieRepository(private val favoriteMovieDao: FavoriteMovieDao) {
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> {
         return ApiClient.apiService.getTopRatedMovies(page = page)
     }
-    fun getAllFavoriteMovies(): Flow<List<FavoriteMovie>> {
-        return favoriteMovieDao.getAllFavoriteMovies()
+    fun getAllFavoriteMovies(userId: String): Flow<List<FavoriteMovie>> {
+        return favoriteMovieDao.getAllFavoriteMovies(userId)
     }
 
-    suspend fun isFavorite(movieId: Int): Boolean {
-        return favoriteMovieDao.getFavoriteMovieById(movieId) != null
+    suspend fun isFavorite(movieId: Int, userId: String): Boolean {
+    return favoriteMovieDao.getFavoriteMovieById(movieId, userId) != null
     }
 
     suspend fun addToFavorites(movie: FavoriteMovie) {

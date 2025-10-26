@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import com.example.appmoive.data.local.AppDatabase
 import com.example.appmoive.data.model.*
 import com.example.appmoive.data.repository.MovieRepository
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 // SỬA 1: Kế thừa từ AndroidViewModel(application)
@@ -13,6 +14,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     // SỬA 2: Khai báo và khởi tạo repository trong khối init
     private val repository: MovieRepository
+    private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     init {
         val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
@@ -37,9 +39,15 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
+
+
+
+
     fun fetchAllData(movieId: Int) {
         viewModelScope.launch {
-            _isFavorite.postValue(repository.isFavorite(movieId))
+            if (userId != null) {
+                _isFavorite.postValue(repository.isFavorite(movieId, userId))
+            }
 
             val detailsResponse = repository.getMovieDetails(movieId)
             if (detailsResponse.isSuccessful) {
@@ -71,17 +79,34 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     fun addToFavorites(movie: MovieDetail) {
         viewModelScope.launch {
-            val favoriteMovie = FavoriteMovie(movie.id, movie.title, movie.posterPath ?: "", movie.overview)
-            repository.addToFavorites(favoriteMovie)
-            _isFavorite.postValue(true)
+            if (userId != null) {
+                // SỬA LẠI DÒNG NÀY
+                val favoriteMovie = FavoriteMovie(
+                    id = movie.id,
+                    title = movie.title,
+                    posterPath = movie.posterPath ?: "",
+                    overview = movie.overview,
+                    userId = userId
+                )
+                repository.addToFavorites(favoriteMovie)
+                _isFavorite.postValue(true)
+            }
         }
     }
-
     fun removeFromFavorites(movie: MovieDetail) {
         viewModelScope.launch {
-            val favoriteMovie = FavoriteMovie(movie.id, movie.title, movie.posterPath ?: "", movie.overview)
-            repository.removeFromFavorites(favoriteMovie)
-            _isFavorite.postValue(false)
+            if (userId != null) {
+                // SỬA LẠI DÒNG NÀY
+                val favoriteMovie = FavoriteMovie(
+                    id = movie.id,
+                    title = movie.title,
+                    posterPath = movie.posterPath ?: "",
+                    overview = movie.overview,
+                    userId = userId
+                )
+                repository.removeFromFavorites(favoriteMovie)
+                _isFavorite.postValue(false)
+            }
         }
     }
 }
