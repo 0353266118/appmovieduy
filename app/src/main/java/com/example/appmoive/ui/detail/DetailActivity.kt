@@ -23,6 +23,9 @@ import com.example.appmoive.ui.adapters.ReviewAdapter
 import com.example.appmoive.utils.Constants.IMAGE_BASE_URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+import androidx.appcompat.app.AlertDialog // <<-- THÊM IMPORT
+import com.example.appmoive.ui.auth.LoginActivity // <<-- THÊM IMPORT
+import com.google.firebase.auth.FirebaseAuth // <<-- THÊM IMPORT
 
 import com.example.appmoive.ui.adapters.OnActorClickListener
 
@@ -35,6 +38,8 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
     private lateinit var castAdapter: CastAdapter
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var similarMoviesAdapter: MovieAdapter // Tái sử dụng MovieAdapter
+    private lateinit var firebaseAuth: FirebaseAuth // <<-- THÊM BIẾN NÀY
+
 
     // Biến để lưu trữ key của trailer
     private var currentTrailerKey: String? = null
@@ -56,6 +61,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
         observeViewModel()
 
         viewModel.fetchAllData(movieId)
+        firebaseAuth = FirebaseAuth.getInstance() // <<-- KHỞI TẠO
     }
 
     private fun setupUI() {
@@ -77,14 +83,19 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
                 playYouTubeTrailer(key)
             }
         }
-        // MỚI: Thêm sự kiện click cho icon trái tim
         binding.ivFavorite.setOnClickListener {
-            currentMovieDetail?.let { movie ->
-                if (viewModel.isFavorite.value == true) {
-                    viewModel.removeFromFavorites(movie)
-                } else {
-                    viewModel.addToFavorites(movie)
+            if (firebaseAuth.currentUser != null) {
+                // Nếu đã đăng nhập, thực hiện logic như cũ
+                currentMovieDetail?.let { movie ->
+                    if (viewModel.isFavorite.value == true) {
+                        viewModel.removeFromFavorites(movie)
+                    } else {
+                        viewModel.addToFavorites(movie)
+                    }
                 }
+            } else {
+                // Nếu chưa đăng nhập, hiển thị hộp thoại
+                showLoginPromptDialog()
             }
         }
 
@@ -213,6 +224,23 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
             putExtra("ACTOR_NAME", actor.name)
         }
         startActivity(intent)
+    }
+    // MỚI: Thêm hàm hiển thị hộp thoại
+    private fun showLoginPromptDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Login Required")
+            .setMessage("You need to be logged in to save favorite movies.")
+            .setPositiveButton("Login / Sign Up") { dialog, _ ->
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }
 

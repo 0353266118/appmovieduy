@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appmoive.R
@@ -18,6 +19,7 @@ import com.example.appmoive.ui.movielist.MovieListActivity
 import com.example.appmoive.ui.search.SearchActivity
 import com.example.appmoive.ui.settings.SettingsActivity
 import com.bumptech.glide.Glide
+import com.example.appmoive.ui.auth.LoginActivity
 import com.example.appmoive.ui.genres.GenresActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -94,57 +96,50 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
     private fun loadUserProfile() {
         val user = firebaseAuth.currentUser
         if (user != null) {
-            // Có người dùng đăng nhập
             val username = user.displayName
             if (!username.isNullOrEmpty()) {
                 binding.tvGreetingName.text = "Hi, $username"
             } else {
-                // Nếu user chưa đặt tên, hiển thị email
                 binding.tvGreetingName.text = "Hi, ${user.email}"
             }
-
-            // Tải ảnh đại diện
             if (user.photoUrl != null) {
                 Glide.with(this).load(user.photoUrl).into(binding.ivAvatar)
             } else {
-                // Nếu không có ảnh, dùng ảnh mặc định
-                binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar) // Dùng cùng ảnh mặc định
+                binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar)
             }
         } else {
-            // Trường hợp không có ai đăng nhập (lỗi hoặc đã đăng xuất)
-            // Có thể chuyển về màn hình Login ở đây nếu cần
-            binding.tvGreetingName.text = "Hi, Guest"
+            // SỬA: Nếu chưa đăng nhập, hiển thị giao diện khách
+            binding.tvGreetingName.text = "Hello"
+            binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar)
         }
     }
 
-    // MỚI: Hàm để thiết lập BottomNavigationView
     private fun setupBottomNavigation() {
-        // Đảm bảo item "Home" được chọn khi khởi động
-        binding.bottomNavigation.selectedItemId = R.id.nav_home
-
         binding.bottomNavigation.setOnItemSelectedListener { item ->
+            // SỬA LẠI LOGIC KHI CLICK
+            // Kiểm tra đăng nhập cho các tab cần thiết
+            val isLoggedIn = firebaseAuth.currentUser != null
+
             when (item.itemId) {
-                R.id.nav_home -> {
-                    // Hiện tại đang ở màn hình Home, nên không cần làm gì
-                    // Hoặc có thể cuộn lên đầu trang
-                    binding.nestedScrollView.smoothScrollTo(0, 0)
-                    true // Trả về true để báo hiệu sự kiện đã được xử lý
-                }
-                R.id.nav_search -> {
-                    // SỬA: Mở GenresActivity thay vì SearchActivity
-                    val intent = Intent(this, GenresActivity::class.java)
-                    startActivity(intent)
+                R.id.nav_home, R.id.nav_search -> {
+                    // Home và Search luôn có thể truy cập
+                    if (item.itemId == R.id.nav_search) {
+                        startActivity(Intent(this, GenresActivity::class.java))
+                    }
                     true
                 }
-                R.id.nav_favorites -> {
-                    val intent = Intent(this, FavoritesActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_profile -> {
-                    // MỞ MÀN HÌNH SETTINGS
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    startActivity(intent)
+                R.id.nav_favorites, R.id.nav_profile -> {
+                    if (isLoggedIn) {
+                        // Nếu đã đăng nhập, mở màn hình tương ứng
+                        if (item.itemId == R.id.nav_favorites) {
+                            startActivity(Intent(this, FavoritesActivity::class.java))
+                        } else {
+                            startActivity(Intent(this, SettingsActivity::class.java))
+                        }
+                    } else {
+                        // Nếu chưa, hiển thị hộp thoại yêu cầu đăng nhập
+                        showLoginPromptDialog()
+                    }
                     true
                 }
                 else -> false
@@ -220,4 +215,29 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 //        // Đảm bảo item "Home" luôn được chọn khi người dùng quay lại màn hình này
 //        binding.bottomNavigation.selectedItemId = R.id.nav_home
 //    }
+
+    // MỚI: Thêm hàm hiển thị hộp thoại
+    private fun showLoginPromptDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Login Required")
+            .setMessage("You need to be logged in to use this feature. Would you like to log in or sign up?")
+            .setPositiveButton("Login / Sign Up") { dialog, _ ->
+                val intent = Intent(this, LoginActivity::class.java)
+                // Xóa các màn hình phía trên để khi back từ Login sẽ thoát app
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                // Khi hủy, set lại item Home được chọn
+                binding.bottomNavigation.selectedItemId = R.id.nav_home
+                dialog.dismiss()
+            }
+            .setOnCancelListener {
+                // Xử lý khi người dùng nhấn nút back để tắt dialog
+                binding.bottomNavigation.selectedItemId = R.id.nav_home
+            }
+            .create()
+            .show()
+    }
 }
