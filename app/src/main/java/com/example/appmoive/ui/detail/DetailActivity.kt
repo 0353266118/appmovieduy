@@ -23,9 +23,9 @@ import com.example.appmoive.ui.adapters.ReviewAdapter
 import com.example.appmoive.utils.Constants.IMAGE_BASE_URL
 import java.text.SimpleDateFormat
 import java.util.Locale
-import androidx.appcompat.app.AlertDialog // <<-- THÊM IMPORT
-import com.example.appmoive.ui.auth.LoginActivity // <<-- THÊM IMPORT
-import com.google.firebase.auth.FirebaseAuth // <<-- THÊM IMPORT
+import androidx.appcompat.app.AlertDialog
+import com.example.appmoive.ui.auth.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 
 import com.example.appmoive.ui.adapters.OnActorClickListener
 
@@ -37,11 +37,11 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
     private val viewModel: DetailViewModel by viewModels()
     private lateinit var castAdapter: CastAdapter
     private lateinit var reviewAdapter: ReviewAdapter
-    private lateinit var similarMoviesAdapter: MovieAdapter // Tái sử dụng MovieAdapter
-    private lateinit var firebaseAuth: FirebaseAuth // <<-- THÊM BIẾN NÀY
+    private lateinit var similarMoviesAdapter: MovieAdapter
+    private lateinit var firebaseAuth: FirebaseAuth
 
 
-    // Biến để lưu trữ key của trailer
+
     private var currentTrailerKey: String? = null
 
     private var currentMovieDetail: MovieDetail? = null
@@ -61,11 +61,11 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
         observeViewModel()
 
         viewModel.fetchAllData(movieId)
-        firebaseAuth = FirebaseAuth.getInstance() // <<-- KHỞI TẠO
+        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     private fun setupUI() {
-        // Setup RecyclerView cho diễn viên
+
         castAdapter = CastAdapter(emptyList(), this)
         binding.rvCast.apply {
             layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
@@ -101,7 +101,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
 
         binding.ivBackArrow.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        // MỚI: Setup RecyclerView cho phim liên quan
+        // Setup RecyclerView cho phim liên quan
         similarMoviesAdapter = MovieAdapter(emptyList(), this) // Tái sử dụng và truyền listener
         binding.rvSimilarMovies.apply {
             layoutManager = LinearLayoutManager(this@DetailActivity, LinearLayoutManager.HORIZONTAL, false)
@@ -118,9 +118,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
                     tvTitleDetail.text = it.title
                     tvRating.text = String.format("%.1f", it.voteAverage)
 
-                    // =======================================================
-                    // SỬA LẠI PHẦN XỬ LÝ NGÀY THÁNG Ở ĐÂY
-                    // =======================================================
+
                     tvReleaseDate.text = formatReleaseDate(it.releaseDate)
 
                     tvGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
@@ -129,7 +127,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
                 }
             }
         }
-        // MỚI: Lắng nghe trailerKey
+
         viewModel.trailerKey.observe(this) { key ->
             currentTrailerKey = key
             if (key != null) {
@@ -149,7 +147,6 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
 
         viewModel.reviews.observe(this) { reviewList ->
             if (reviewList.isNullOrEmpty()) {
-                // Logic này vẫn đúng: Ẩn cả tiêu đề và container
                 binding.groupReviews.visibility = View.GONE
             } else {
                 // Hiện lên và đổ dữ liệu
@@ -181,7 +178,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
     }
     private fun formatReleaseDate(dateString: String?): String {
         if (dateString.isNullOrEmpty()) {
-            return "N/A" // Trả về "Not Available" nếu không có ngày
+            return "N/A"
         }
         try {
             // Định dạng đầu vào từ API (YYYY-MM-DD)
@@ -192,7 +189,6 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
             val date = inputFormat.parse(dateString)
             return if (date != null) outputFormat.format(date) else dateString
         } catch (e: Exception) {
-            // Nếu có lỗi parse, trả về chuỗi gốc
             return dateString
         }
     }
@@ -217,7 +213,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
         }
         startActivity(intent)
     }
-    // SỬA: Hàm override cho click diễn viên
+    // Hàm override cho click diễn viên
     override fun onActorClick(actor: Cast) {
         val intent = Intent(this, ActorMoviesActivity::class.java).apply {
             putExtra("ACTOR_ID", actor.id)
@@ -225,7 +221,7 @@ class DetailActivity : AppCompatActivity(), OnMovieClickListener, OnActorClickLi
         }
         startActivity(intent)
     }
-    // MỚI: Thêm hàm hiển thị hộp thoại
+    //Thêm hàm hiển thị hộp thoại
     private fun showLoginPromptDialog() {
         AlertDialog.Builder(this)
             .setTitle("Login Required")

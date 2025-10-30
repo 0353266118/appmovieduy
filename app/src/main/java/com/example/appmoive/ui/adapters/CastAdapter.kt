@@ -10,7 +10,7 @@ import com.example.appmoive.data.model.Cast
 import com.example.appmoive.databinding.ItemCastBinding
 import com.example.appmoive.utils.Constants
 
-// SỬA 1: Thêm listener vào constructor
+
 class CastAdapter(
     private var castList: List<Cast>,
     private val listener: OnActorClickListener
@@ -37,7 +37,7 @@ class CastAdapter(
                 .into(ivCastPhoto)
         }
 
-        // SỬA 2: Thêm sự kiện click
+        //  Thêm sự kiện click
         holder.itemView.setOnClickListener {
             listener.onActorClick(castMember)
         }

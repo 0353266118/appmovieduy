@@ -78,12 +78,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // MỚI: Sự kiện click cho "Forgot Password?"
+        // Sự kiện click cho "Forgot Password?"
         binding.tvForgotPassword.setOnClickListener {
             showForgotPasswordDialog()
         }
 
-        // MỚI: Sự kiện click cho nút "Continue with Google"
+        //  Sự kiện click cho nút "Continue with Google"
         binding.btnGoogle.setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             googleSignInLauncher.launch(signInIntent)
@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // MỚI: Hàm hiển thị hộp thoại quên mật khẩu
+    // Hàm hiển thị hộp thoại quên mật khẩu
     private fun showForgotPasswordDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Reset Password")
@@ -111,7 +111,7 @@ class LoginActivity : AppCompatActivity() {
             val email = input.text.toString().trim()
             if (email.isNotEmpty()) {
                 viewModel.sendPasswordResetEmail(email)
-                // Hiển thị thông báo chung chung
+
                 Toast.makeText(this, "If your email is registered, you will receive a reset link.", Toast.LENGTH_LONG).show()
             }
             dialog.dismiss()
@@ -152,8 +152,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, error, Toast.LENGTH_LONG).show()
         }
 
-        // Lắng nghe trạng thái loading để hiện/ẩn ProgressBar (nếu có)
-        // Hoặc vô hiệu hóa nút để tránh spam click
+
         viewModel.isLoading.observe(this) { isLoading ->
             binding.btnContinue.isEnabled = !isLoading
         }
@@ -161,7 +160,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToHomeScreen() {
         val intent = Intent(this, HomeActivity::class.java)
-        // Xóa tất cả các activity cũ khỏi stack, để người dùng không thể back lại màn hình login
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

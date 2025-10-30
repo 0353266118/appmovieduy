@@ -25,14 +25,14 @@ class ReviewAdapter(private var reviewList: List<Review>) : RecyclerView.Adapter
             tvReviewAuthor.text = review.author
             tvReviewContent.text = review.content
 
-            // SỬA LẠI PHẦN NÀY
+
             val ratingValue = review.authorDetails.rating
             if (ratingValue != null) {
                 rbReviewRating.visibility = View.VISIBLE
-                // API trả về thang 10, RatingBar có 10 sao, không cần chia 2 nữa
+
                 rbReviewRating.rating = ratingValue.toFloat()
             } else {
-                // Nếu không có rating, ẩn RatingBar đi
+
                 rbReviewRating.visibility = View.GONE
             }
         }

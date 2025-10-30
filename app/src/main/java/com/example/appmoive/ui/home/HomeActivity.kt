@@ -23,10 +23,10 @@ import com.example.appmoive.ui.auth.LoginActivity
 import com.example.appmoive.ui.genres.GenresActivity
 import com.google.firebase.auth.FirebaseAuth
 
-// Đảm bảo class implement OnMovieClickListener
+
 class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
-    private lateinit var firebaseAuth: FirebaseAuth // <<-- THÊM BIẾN NÀY
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityHomeBinding
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -47,14 +47,11 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
         // Bắt đầu chạy hiệu ứng Shimmer ngay khi activity được tạo
         binding.shimmerRecommended.startShimmer()
-        // (Thêm dòng này nếu em đã làm shimmer cho Top Rated)
-        // binding.shimmerTopRated.startShimmer()
 
         setupRecyclerView()
         setupBannerViewPager()
         setupTopRatedRecyclerView()
-        // BẮT ĐẦU PHẦN CODE MỚI CHO BOTTOM NAVIGATION
-        // ================================================================
+
         setupBottomNavigation()
 
         observeViewModel()
@@ -71,7 +68,7 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
             startActivity(intent)
         }
 
-        // MỚI: Click vào See All của Top Rated
+        //  Click vào See All của Top Rated
         binding.tvSeeAllTopRated.setOnClickListener {
             val intent = Intent(this, MovieListActivity::class.java).apply {
                 putExtra("LIST_TYPE", "top_rated")
@@ -108,7 +105,7 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
                 binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar)
             }
         } else {
-            // SỬA: Nếu chưa đăng nhập, hiển thị giao diện khách
+            //Nếu chưa đăng nhập, hiển thị giao diện khách
             binding.tvGreetingName.text = "Hello"
             binding.ivAvatar.setImageResource(R.drawable.placeholder_avatar)
         }
@@ -175,7 +172,6 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
     private fun observeViewModel() {
         homeViewModel.popularMovies.observe(this) { movies ->
             movies?.let {
-                // Tắt shimmer và hiện RecyclerView
                 binding.shimmerRecommended.stopShimmer()
                 binding.shimmerRecommended.visibility = View.GONE
                 binding.rvRecommended.visibility = View.VISIBLE
@@ -186,22 +182,18 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
 
         homeViewModel.trendingMovies.observe(this) { movies ->
             movies?.let {
-                // (Thêm logic shimmer cho banner nếu cần)
                 bannerAdapter.setData(it.take(5))
             }
         }
 
         homeViewModel.topRatedMovies.observe(this) { movies ->
             movies?.let {
-                // (Thêm logic shimmer cho Top Rated nếu cần)
                 topRatedAdapter.setData(it.take(10))
             }
         }
     }
 
-    // ================================================================
-    // HÀM onMovieClick NẰM Ở ĐÂY - NGANG HÀNG VỚI CÁC HÀM KHÁC
-    // ================================================================
+
     override fun onMovieClick(movie: Movie) {
         Log.d("HomeActivity", "Clicked on movie: ${movie.title} (ID: ${movie.id})")
         val intent = Intent(this, DetailActivity::class.java).apply {
@@ -209,14 +201,7 @@ class HomeActivity : AppCompatActivity(), OnMovieClickListener {
         }
         startActivity(intent)
     }
-    // MỚI: Xử lý khi quay lại HomeActivity từ màn hình khác
-//    override fun onResume() {
-//        super.onResume()
-//        // Đảm bảo item "Home" luôn được chọn khi người dùng quay lại màn hình này
-//        binding.bottomNavigation.selectedItemId = R.id.nav_home
-//    }
-
-    // MỚI: Thêm hàm hiển thị hộp thoại
+    // hàm hiển thị hộp thoại
     private fun showLoginPromptDialog() {
         AlertDialog.Builder(this)
             .setTitle("Login Required")

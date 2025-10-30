@@ -45,7 +45,7 @@ class GenreChipAdapter(
 
     fun setData(newGenres: List<Genre>) {
         genres = newGenres
-        selectedPosition = 0 // Reset lại vị trí chọn khi có dữ liệu mới
+        selectedPosition = 0
         notifyDataSetChanged()
     }
 }

@@ -5,6 +5,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
+
+// chứa URL gốc và tạo đối tượng Retrofit để gọi API
+
 object ApiClient {
     // Tạo đối tượng Retrofit
     private val retrofit: Retrofit by lazy {

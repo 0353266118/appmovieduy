@@ -6,6 +6,6 @@ package com.example.appmoive.ui.adapters
 import com.example.appmoive.data.model.FavoriteMovie
 
 interface OnFavoriteClickListener {
-    fun onFavoriteMovieClick(movie: FavoriteMovie) // Click vào cả item
-    fun onRemoveFavoriteClick(movie: FavoriteMovie) // Click vào icon trái tim
+    fun onFavoriteMovieClick(movie: FavoriteMovie)
+    fun onRemoveFavoriteClick(movie: FavoriteMovie)
 }

@@ -21,7 +21,7 @@ class SearchActivity : AppCompatActivity(), OnMovieClickListener {
     private val viewModel: SearchViewModel by viewModels()
     private lateinit var searchAdapter: MovieListAdapter // Tái sử dụng MovieListAdapter
 
-    private var searchJob: Job? = null // Biến để quản lý coroutine debounce
+    private var searchJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,13 +36,12 @@ class SearchActivity : AppCompatActivity(), OnMovieClickListener {
     private fun setupUI() {
         binding.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        // Lắng nghe sự kiện thay đổi text trong ô tìm kiếm
         binding.etSearch.addTextChangedListener { editable ->
             val query = editable.toString().trim()
 
-            // Hủy bỏ job tìm kiếm cũ
+
             searchJob?.cancel()
-            // Tạo một job mới với độ trễ (debounce)
+
             searchJob = MainScope().launch {
                 delay(500L) // Chờ 500ms sau khi người dùng ngừng gõ
                 viewModel.searchMovies(query)
@@ -51,7 +50,7 @@ class SearchActivity : AppCompatActivity(), OnMovieClickListener {
     }
 
     private fun setupRecyclerView() {
-        searchAdapter = MovieListAdapter(mutableListOf(), this) // Tự động showFavoriteIcon = false
+        searchAdapter = MovieListAdapter(mutableListOf(), this)
         binding.rvSearchResults.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = searchAdapter
@@ -60,7 +59,6 @@ class SearchActivity : AppCompatActivity(), OnMovieClickListener {
 
     private fun observeViewModel() {
         viewModel.searchResults.observe(this) { movies ->
-            // MovieListAdapter cần hàm setData, chúng ta sẽ thêm nó
             searchAdapter.setData(movies ?: emptyList())
         }
     }

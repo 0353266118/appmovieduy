@@ -2,6 +2,8 @@ package com.example.appmoive.data.model
 
 import com.google.gson.annotations.SerializedName
 
+
+// chi tiết về 1 phim
 data class MovieDetail(
     val id: Int,
     val title: String,

@@ -9,7 +9,7 @@ import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ItemMoviePosterBinding
 import com.example.appmoive.utils.Constants
 
-// SỬA 1: Thêm listener vào constructor
+
 class TopRatedAdapter(
     private var movies: List<Movie>,
     private val listener: OnMovieClickListener
@@ -35,7 +35,7 @@ class TopRatedAdapter(
             tvMovieGenre.text = "Action, Adventure"
         }
 
-        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+
         holder.itemView.setOnClickListener {
             listener.onMovieClick(movie)
         }

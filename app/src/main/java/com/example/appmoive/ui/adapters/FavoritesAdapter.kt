@@ -9,7 +9,7 @@ import com.example.appmoive.data.model.FavoriteMovie
 import com.example.appmoive.databinding.ItemTopSearchBinding
 import com.example.appmoive.utils.Constants
 
-// SỬA 1: Thêm listener vào constructor
+
 class FavoritesAdapter(
     private var movies: List<FavoriteMovie>,
     private val listener: OnFavoriteClickListener
@@ -33,7 +33,7 @@ class FavoritesAdapter(
             tvMovieTitle.text = movie.title
             tvMovieGenre.text = movie.overview
 
-            // SỬA 2: Thêm sự kiện click
+            // Thêm sự kiện click
             // Click vào cả item
             holder.itemView.setOnClickListener {
                 listener.onFavoriteMovieClick(movie)

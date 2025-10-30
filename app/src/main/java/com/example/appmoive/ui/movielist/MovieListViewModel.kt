@@ -18,8 +18,8 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
     private var currentPage = 1
     private var isFetching = false
 
-    // Biến mới để xác định loại danh sách cần tải
-    var listType: String = "popular" // Giá trị mặc định
+
+    var listType: String = "popular"
 
     init {
         val favoriteMovieDao = AppDatabase.getDatabase(application).favoriteMovieDao()
@@ -32,7 +32,7 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
-    // Hàm "đa năng" mới để tải phim
+
     fun fetchMovies() {
         if (isFetching) {
             return
@@ -42,7 +42,6 @@ class MovieListViewModel(application: Application) : AndroidViewModel(applicatio
 
         viewModelScope.launch {
             try {
-                // Sử dụng 'when' để quyết định gọi API nào dựa trên listType
                 val response = when (listType) {
                     "top_rated" -> repository.getTopRatedMovies(page = currentPage)
                     else -> repository.getPopularMovies(page = currentPage) // Mặc định là 'popular'

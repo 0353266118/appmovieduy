@@ -32,9 +32,9 @@ class MovieListAdapter(
                 .load(Constants.IMAGE_BASE_URL + movie.posterPath)
                 .into(ivPoster)
             tvMovieTitle.text = movie.title
-            tvMovieGenre.text = "Action, Adventure" // Dữ liệu giả
+            tvMovieGenre.text = "Action, Adventure"
 
-            // SỬA 2: DI CHUYỂN KHỐI IF VÀO TRONG NÀY
+
             if (showFavoriteIcon) {
                 ivItemFavorite.visibility = View.VISIBLE
             } else {
@@ -42,7 +42,7 @@ class MovieListAdapter(
             }
         }
 
-        // Sự kiện click cho toàn bộ item vẫn nằm ở ngoài
+
         holder.itemView.setOnClickListener {
             listener.onMovieClick(movie)
         }

@@ -37,19 +37,19 @@ class SettingsActivity : AppCompatActivity() {
         binding.layoutLogout.setOnClickListener {
             showLogoutConfirmationDialog()
         }
-        // MỚI: Thêm sự kiện click cho Change Password
+
         binding.layoutChangePassword.setOnClickListener {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         }
-        // MỚI: Thêm sự kiện click cho Edit Profile
+
         binding.layoutEditProfile.setOnClickListener {
             val intent = Intent(this, EditProfileActivity::class.java)
             startActivity(intent)
         }
     }
 
-    // MỚI: Hàm hiển thị hộp thoại xác nhận đăng xuất
+
     private fun showLogoutConfirmationDialog() {
         AlertDialog.Builder(this)
             .setTitle("Logout")
@@ -67,12 +67,12 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
-    // MỚI: Hàm thực hiện đăng xuất và chuyển màn hình
+    // Hàm thực hiện đăng xuất và chuyển màn hình
     private fun logoutUser() {
-        // Đăng xuất khỏi Firebase
+
         firebaseAuth.signOut()
 
-        // Chuyển người dùng về màn hình Login
+
         val intent = Intent(this, LoginActivity::class.java)
         // Xóa tất cả các activity cũ khỏi stack, đảm bảo người dùng không thể back lại
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

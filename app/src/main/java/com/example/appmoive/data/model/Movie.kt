@@ -1,5 +1,7 @@
 package com.example.appmoive.data.model
 import com.google.gson.annotations.SerializedName
+
+// tóm gọn thông tin 1 phim
 data class Movie(
     @SerializedName("id")
     val id: Int,

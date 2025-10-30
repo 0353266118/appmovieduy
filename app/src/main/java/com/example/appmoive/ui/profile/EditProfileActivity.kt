@@ -15,9 +15,6 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditProfileBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
-    // Bỏ hết các biến liên quan đến chọn ảnh
-    // private var imageUri: Uri? = null
-    // private val selectImageLauncher = ...
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,18 +27,18 @@ class EditProfileActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
-    // Tải và hiển thị thông tin người dùng hiện tại
+
     private fun loadUserInfo() {
         val user = firebaseAuth.currentUser
         user?.let {
             binding.etUsername.setText(it.displayName)
             binding.etEmail.setText(it.email)
 
-            // Vẫn hiển thị ảnh đại diện cũ (nếu có)
+
             if (it.photoUrl != null) {
                 Glide.with(this).load(it.photoUrl).into(binding.ivProfileAvatar)
             } else {
-                // Nếu không có ảnh, hiển thị một ảnh mặc định
+
                 binding.ivProfileAvatar.setImageResource(R.drawable.placeholder_avatar)
             }
         }
@@ -52,7 +49,7 @@ class EditProfileActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Vô hiệu hóa chức năng click vào ảnh
+
         binding.ivProfileAvatar.isClickable = false
 
         binding.btnSaveChanges.setOnClickListener {
@@ -61,16 +58,13 @@ class EditProfileActivity : AppCompatActivity() {
                 Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Chỉ gọi hàm cập nhật tên
             updateUsername(newUsername)
         }
     }
 
-    // Hàm chỉ dùng để cập nhật tên người dùng
     private fun updateUsername(username: String) {
         val user = firebaseAuth.currentUser ?: return
 
-        // Vô hiệu hóa nút để tránh spam
         binding.btnSaveChanges.isEnabled = false
         Toast.makeText(this, "Updating username...", Toast.LENGTH_SHORT).show()
 
@@ -82,11 +76,10 @@ class EditProfileActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Username updated successfully!", Toast.LENGTH_SHORT).show()
-                    finish() // Đóng màn hình sau khi cập nhật thành công
+                    finish()
                 } else {
                     Toast.makeText(this, "Failed to update username: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
-                // Bật lại nút dù thành công hay thất bại
                 binding.btnSaveChanges.isEnabled = true
             }
     }

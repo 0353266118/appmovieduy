@@ -10,11 +10,11 @@ import com.bumptech.glide.Glide
 import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ActivityActorMoviesBinding
 import com.example.appmoive.ui.adapters.MovieListAdapter
-import com.example.appmoive.ui.adapters.OnMovieClickListener // <<-- ĐẢM BẢO IMPORT
+import com.example.appmoive.ui.adapters.OnMovieClickListener
 import com.example.appmoive.ui.detail.DetailActivity
 import com.example.appmoive.utils.Constants
 
-// SỬA: Implement interface
+
 class ActorMoviesActivity : AppCompatActivity(), OnMovieClickListener {
 
     private lateinit var binding: ActivityActorMoviesBinding
@@ -53,14 +53,10 @@ class ActorMoviesActivity : AppCompatActivity(), OnMovieClickListener {
     private fun observeViewModel() {
         viewModel.actorDetails.observe(this) { actor ->
             actor?.let {
-                // SỬA 1: Chỉ cập nhật tên trên toolbar (khi co lại). Tên lớn đã có sẵn.
-                // Nếu muốn tên lớn trên ảnh, chúng ta sẽ làm cách khác.
+
                 binding.collapsingToolbar.title = it.name
 
-                // Cập nhật tên lớn (khi mở rộng)
-//                binding.tvActorNameLarge.text = it.name
 
-                // SỬA 2: Thêm text nhãn "Birthday: " và "Place of Birth: "
                 val birthdayText = "Birthday: ${it.birthday ?: "N/A"}"
                 binding.tvActorBirthday.text = birthdayText
 
@@ -79,7 +75,7 @@ class ActorMoviesActivity : AppCompatActivity(), OnMovieClickListener {
         }
     }
 
-    // SỬA: Hàm override phải nằm ở đây
+
     override fun onMovieClick(movie: Movie) {
         val intent = Intent(this, DetailActivity::class.java).apply {
             putExtra("MOVIE_ID", movie.id)

@@ -54,33 +54,29 @@ class ChangePasswordActivity : AppCompatActivity() {
     private fun changePassword(newPassword: String) {
         val user = firebaseAuth.currentUser
 
-        // Vô hiệu hóa nút để tránh spam click
+
         binding.btnChangeNow.isEnabled = false
 
         user?.updatePassword(newPassword)
             ?.addOnCompleteListener { task ->
-                // Bật lại nút sau khi có kết quả
+
                 binding.btnChangeNow.isEnabled = true
 
                 if (task.isSuccessful) {
-                    // Đổi mật khẩu thành công, hiển thị hộp thoại thông báo
                     showSuccessDialog()
                 } else {
-                    // Có lỗi xảy ra, hiển thị thông báo lỗi
                     val errorMessage = task.exception?.message ?: "Failed to update password. Please try again."
                     Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_LONG).show()
                 }
             }
     }
 
-    // MỚI: Hộp thoại thông báo thành công và yêu cầu đăng nhập lại
     private fun showSuccessDialog() {
         AlertDialog.Builder(this)
             .setTitle("Password Updated")
             .setMessage("Your password has been changed successfully. Please log in again to continue.")
-            .setCancelable(false) // Ngăn người dùng đóng hộp thoại bằng nút back
+            .setCancelable(false)
             .setPositiveButton("OK") { dialog, _ ->
-                // Người dùng nhấn OK -> Đăng xuất và chuyển về màn hình Login
                 logoutAndGoToLogin()
                 dialog.dismiss()
             }
@@ -88,7 +84,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             .show()
     }
 
-    // MỚI: Hàm đăng xuất và chuyển màn hình
+
     private fun logoutAndGoToLogin() {
         firebaseAuth.signOut()
         val intent = Intent(this, LoginActivity::class.java)

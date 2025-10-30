@@ -4,7 +4,8 @@ package com.example.appmoive.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-// SỬA 1: Khai báo khóa chính σύνθετη
+// class chứa thông tin về phim yêu thích
+
 @Entity(tableName = "favorite_movies", primaryKeys = ["id", "userId"])
 data class FavoriteMovie(
     val id: Int,

@@ -9,7 +9,7 @@ import com.example.appmoive.data.model.Movie
 import com.example.appmoive.databinding.ItemMovieBannerBinding
 import com.example.appmoive.utils.Constants
 
-// SỬA 1: Thêm listener vào constructor
+
 class BannerAdapter(
     private var movies: List<Movie>,
     private val listener: OnMovieClickListener
@@ -37,7 +37,7 @@ class BannerAdapter(
             tvBannerDescription.text = movie.overview
         }
 
-        // SỬA 2: Thêm sự kiện click cho toàn bộ item
+        // Thêm sự kiện click cho toàn bộ item
         holder.itemView.setOnClickListener {
             listener.onMovieClick(movie)
         }

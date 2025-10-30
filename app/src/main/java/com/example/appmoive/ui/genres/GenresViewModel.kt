@@ -21,7 +21,7 @@ class GenresViewModel(application: Application) : AndroidViewModel(application) 
     private val _genres = MutableLiveData<List<Genre>>()
     val genres: LiveData<List<Genre>> = _genres
 
-    // LiveData cho danh sách phim theo thể loại (sẽ được cập nhật liên tục)
+    // LiveData cho danh sách phim theo thể loại
     private val _moviesByGenre = MutableLiveData<List<Movie>>()
     val moviesByGenre: LiveData<List<Movie>> = _moviesByGenre
 
@@ -29,8 +29,8 @@ class GenresViewModel(application: Application) : AndroidViewModel(application) 
     private var movieList = mutableListOf<Movie>()
     private var currentPage = 1
     private var isFetching = false
-    var currentGenreId: Int? = null // Activity sẽ cần truy cập biến này
-        private set // Chỉ cho phép ViewModel thay đổi giá trị này
+    var currentGenreId: Int? = null
+        private set
 
     init {
         val dao = AppDatabase.getDatabase(application).favoriteMovieDao()
@@ -47,10 +47,7 @@ class GenresViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun fetchMoviesByGenre(genreId: Int) {
-        // Nếu đang fetch rồi thì không làm gì cả
         if (isFetching) return
-
-        // Nếu người dùng chọn một thể loại mới, reset lại mọi thứ
         if (currentGenreId != genreId) {
             currentPage = 1
             currentGenreId = genreId
@@ -58,7 +55,6 @@ class GenresViewModel(application: Application) : AndroidViewModel(application) 
         }
 
         isFetching = true
-        // Có thể thêm LiveData cho isLoading ở đây để hiển thị ProgressBar
 
         viewModelScope.launch {
             try {
@@ -76,7 +72,6 @@ class GenresViewModel(application: Application) : AndroidViewModel(application) 
             } catch (e: Exception) {
                 Log.e("GenresViewModel", "Exception: ${e.message}")
             } finally {
-                // Dù thành công hay thất bại cũng phải hạ cờ
                 isFetching = false
             }
         }

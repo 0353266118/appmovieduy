@@ -8,12 +8,14 @@ import com.example.appmoive.data.model.MovieResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
+
+// nơi quyết định xem lấy dữ liệu từ API hay Database
 class MovieRepository(private val favoriteMovieDao: FavoriteMovieDao) {
 
     // --- Hàm gọi API Phim ---
     suspend fun getPopularMovies(page: Int): Response<MovieResponse> = ApiClient.apiService.getPopularMovies(page = page)
 
-    // SỬA LẠI: Bỏ tham số page vì ApiService đã thay đổi
+
     suspend fun getTrendingMovies(): Response<MovieResponse> = ApiClient.apiService.getTrendingMovies()
 
     suspend fun getTopRatedMovies(page: Int): Response<MovieResponse> = ApiClient.apiService.getTopRatedMovies(page = page)

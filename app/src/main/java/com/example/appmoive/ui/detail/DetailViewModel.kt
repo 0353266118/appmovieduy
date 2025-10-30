@@ -9,10 +9,10 @@ import com.example.appmoive.data.repository.MovieRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
-// SỬA 1: Kế thừa từ AndroidViewModel(application)
+// Kế thừa từ AndroidViewModel(application)
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    // SỬA 2: Khai báo và khởi tạo repository trong khối init
+
     private val repository: MovieRepository
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 

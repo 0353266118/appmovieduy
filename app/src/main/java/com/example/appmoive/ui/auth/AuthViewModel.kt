@@ -47,7 +47,7 @@ class AuthViewModel : ViewModel() {
                 _isLoading.postValue(false)
             }
     }
-    // MỚI: Thêm hàm gửi email reset password
+    // Thêm hàm gửi email reset password
     fun sendPasswordResetEmail(email: String) {
         _isLoading.postValue(true)
         auth.sendPasswordResetEmail(email)

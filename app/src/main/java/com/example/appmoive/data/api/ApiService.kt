@@ -8,6 +8,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+
+// interface định nghĩa các lệnh api gọi đến sever
 interface ApiService {
 
     // --- API cho danh sách phim ---

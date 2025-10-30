@@ -5,7 +5,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-// một lớp helper cho thiết kế giao diện
+// một lớp helper cho thiết kế giao diện  căn lề cho đẹp
 class GridSpacingItemDecoration(
     private val spanCount: Int,
     private val spacing: Int,

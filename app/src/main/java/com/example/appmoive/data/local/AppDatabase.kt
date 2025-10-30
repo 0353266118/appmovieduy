@@ -6,7 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.appmoive.data.model.FavoriteMovie
 
-@Database(entities = [FavoriteMovie::class], version = 2, exportSchema = false) // <<-- TĂNG VERSION LÊN 2
+// class AppDatabase dùng để chứa thông tin về cơ sở dữ liệu Room
+
+@Database(entities = [FavoriteMovie::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun favoriteMovieDao(): FavoriteMovieDao
@@ -23,7 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "movie_database"
                 )
-                    .fallbackToDestructiveMigration() // <<-- THÊM DÒNG NÀY
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance
